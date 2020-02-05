@@ -1,9 +1,9 @@
 {
     "id" : "io.qt.qtwebengine.BaseApp",
-    "branch": "5.13",
+    "branch": "5.14",
     "runtime" : "org.kde.Platform",
     "sdk" : "org.kde.Sdk",
-    "runtime-version" : "5.13",
+    "runtime-version" : "5.14",
     "modules" : [
         {
             "name" : "qt5-qtwebengine",
@@ -80,8 +80,8 @@
             "sources" : [
                 {
                     "type" : "archive",
-                    "url" : "http://download.qt.io/archive/qt/5.13/5.13.2/submodules/qtwebengine-everywhere-src-5.13.2.tar.xz",
-                    "sha256" : "adcf56b5de6f34744bba2307b696fc75611884f4270e87dfa760d6e99dd711bb"
+                    "url" : "http://download.qt.io/archive/qt/5.14/5.14.1/submodules/qtwebengine-everywhere-src-5.14.1.tar.xz",
+                    "sha256" : "4ec77040a876a83aa2a833ebfe7b3e88dcc167ceb317095eb226a0b8d455e887"
                 },
                 {
                     "type" : "patch",
