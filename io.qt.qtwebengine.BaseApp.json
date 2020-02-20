@@ -22,7 +22,8 @@
             ],
             "post-install" : [
                 "cp -r /app/scratchdir/usr/* /app",
-                "rm -rf /app/scratchdir"
+                "rm -rf /app/scratchdir",
+                "ln -s /app/lib/*/*.so* /app/lib"
             ],
             "modules" : [
                 {
