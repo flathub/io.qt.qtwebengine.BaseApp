@@ -9,8 +9,7 @@
             "name" : "qt5-qtwebengine",
             "buildsystem" : "qmake",
             "cleanup" : [
-                "/bin",
-                "/mkspecs"
+                "/bin"
             ],
             "make-install-args": ["INSTALL_ROOT=/app/scratchdir"],
             "config-opts" : [
@@ -23,7 +22,8 @@
             "post-install" : [
                 "cp -r /app/scratchdir/usr/* /app",
                 "rm -rf /app/scratchdir",
-                "ln -s /app/lib/*/*.so* /app/lib"
+                "ln -s /app/lib/*/*.so* /app/lib",
+                "mv /app/mkspecs /app/lib"
             ],
             "modules" : [
                 {
