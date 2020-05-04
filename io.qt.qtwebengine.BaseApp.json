@@ -81,8 +81,8 @@
             "sources" : [
                 {
                     "type" : "archive",
-                    "url" : "http://download.qt.io/archive/qt/5.14/5.14.1/submodules/qtwebengine-everywhere-src-5.14.1.tar.xz",
-                    "sha256" : "4ec77040a876a83aa2a833ebfe7b3e88dcc167ceb317095eb226a0b8d455e887"
+                    "url" : "http://download.qt.io/archive/qt/5.14/5.14.2/submodules/qtwebengine-everywhere-src-5.14.2.tar.xz",
+                    "sha256" : "e169d6a75d8c397e04f843bc1b9585950fb9a001255cd18d6293f66fa8a6c947"
                 },
                 {
                     "type" : "patch",
