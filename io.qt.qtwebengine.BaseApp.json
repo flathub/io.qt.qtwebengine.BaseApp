@@ -23,7 +23,8 @@
             "post-install" : [
                 "cp -r /app/scratchdir/usr/* /app",
                 "rm -rf /app/scratchdir",
-                "ln -s /app/lib/*/*.so* /app/lib"
+                "ln -s /app/lib/*/*.so* /app/lib",
+                "find /app/lib/mkspecs/modules -type f -exec sed -i 's:$$QT_MODULE_LIB_BASE:/app/lib:' {} +"
             ],
             "modules" : [
                 {
