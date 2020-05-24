@@ -75,6 +75,10 @@
                 },
                 {
                     "type": "patch",
+                    "path": "patches/locales.patch"
+                },
+                {
+                    "type": "patch",
                     "path": "patches/resources.patch"
                 }
             ]
