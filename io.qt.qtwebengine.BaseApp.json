@@ -56,7 +56,7 @@
                         {
                             "type": "git",
                             "url": "https://kernel.googlesource.com/pub/scm/utils/pciutils/pciutils",
-                            "branch": "v3.6.2"
+                            "branch": "v3.6.4"
                         },
                         {
                             "type": "shell",
