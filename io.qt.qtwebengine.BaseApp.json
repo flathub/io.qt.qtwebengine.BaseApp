@@ -17,7 +17,6 @@
             "config-opts": [
                 "--",
                 "-system-ffmpeg",
-                "-system-icu",
                 "-webengine-proprietary-codecs",
                 "-webengine-icu",
                 "-webp"
@@ -81,6 +80,10 @@
                 {
                     "type": "patch",
                     "path": "patches/resources.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/icu67.patch"
                 }
             ]
         },
