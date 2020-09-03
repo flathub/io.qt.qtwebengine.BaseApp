@@ -17,6 +17,7 @@
             "config-opts": [
                 "--",
                 "-system-ffmpeg",
+                "-system-icu",
                 "-webengine-proprietary-codecs",
                 "-webengine-icu",
                 "-webp"
