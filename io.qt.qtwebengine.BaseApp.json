@@ -80,10 +80,6 @@
                 {
                     "type": "patch",
                     "path": "patches/resources.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/icu67.patch"
                 }
             ]
         },
