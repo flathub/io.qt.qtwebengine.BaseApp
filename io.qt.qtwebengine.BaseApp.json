@@ -70,8 +70,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "http://download.qt.io/archive/qt/5.15/5.15.0/submodules/qtwebengine-everywhere-src-5.15.0.tar.xz",
-                    "sha256": "c38e2fda7ed1b7d5a90f26abf231ec0715d78a5bc39a94673d8e39d75f04c5df"
+                    "url": "http://download.qt.io/archive/qt/5.15/5.15.1/submodules/qtwebengine-everywhere-src-5.15.1.tar.xz",
+                    "sha256": "f903e98fe3cd717161252710125fce011cf882ced96c24968b0c38811fbefdf2"
                 },
                 {
                     "type": "patch",
@@ -80,10 +80,6 @@
                 {
                     "type": "patch",
                     "path": "patches/resources.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/icu67.patch"
                 }
             ]
         },
