@@ -68,11 +68,7 @@
                 }
             ],
             "sources": [
-                {
-                    "type": "archive",
-                    "url": "http://download.qt.io/archive/qt/5.15/5.15.2/submodules/qtwebengine-everywhere-src-5.15.2.tar.xz",
-                    "sha256": "c8afca0e43d84f7bd595436fbe4d13a5bbdb81ec5104d605085d07545b6f91e0"
-                },
+                { "type": "git", "url": "https://invent.kde.org/qt/qt/qtwebengine.git", "commit": "e0b4b9436033e9bc376597ed90dd1fca9cdc90ff" },
                 {
                     "type": "patch",
                     "path": "patches/locales.patch"

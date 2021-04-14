@@ -1,13 +1,13 @@
 diff --git a/src/core/web_engine_library_info.cpp b/src/core/web_engine_library_info.cpp
-index 1c83164..b68c943 100644
+index 09a4141b..a2245ccc 100644
 --- a/src/core/web_engine_library_info.cpp
 +++ b/src/core/web_engine_library_info.cpp
-@@ -187,12 +187,7 @@ QString subProcessPath()
+@@ -201,12 +201,7 @@ QString subProcessPath()
  QString localesPath()
  {
      static bool initialized = false;
 -    static QString potentialLocalesPath =
--#if defined(OS_MACOSX) && defined(QT_MAC_FRAMEWORK_BUILD)
+-#if defined(OS_MAC) && defined(QT_MAC_FRAMEWORK_BUILD)
 -            getResourcesPath(frameworkBundle()) % QLatin1String("/qtwebengine_locales");
 -#else
 -            QLibraryInfo::location(QLibraryInfo::TranslationsPath) % QDir::separator() % QLatin1String("qtwebengine_locales");
