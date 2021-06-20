@@ -3,11 +3,20 @@
     "branch": "5.15",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
+    "sdk-extensions": [
+        "org.freedesktop.Sdk.Extension.node14"
+    ],
     "runtime-version": "5.15",
     "modules": [
         {
             "name": "qt5-qtwebengine",
             "buildsystem": "qmake",
+            "build-options" : {
+                "append-path": "/usr/lib/sdk/node14/bin",
+                "env": [
+                  "npm_config_nodedir=/usr/lib/sdk/node14"
+                ]
+            },
             "cleanup": [
                 "/bin"
             ],
@@ -56,7 +65,12 @@
                         {
                             "type": "git",
                             "url": "https://kernel.googlesource.com/pub/scm/utils/pciutils/pciutils",
-                            "branch": "v3.6.4"
+                            "tag": "v3.6.4",
+                            "commit": "61ecc14a327de030336f1ff3fea9c7e7e55a90ca",
+                            "x-checker-data": {
+                                "type": "git",
+                                "tag-pattern": "^v([\\d.]+)$"
+                            }
                         },
                         {
                             "type": "shell",
@@ -69,9 +83,14 @@
             ],
             "sources": [
                 {
-                    "type": "archive",
-                    "url": "http://download.qt.io/archive/qt/5.15/5.15.2/submodules/qtwebengine-everywhere-src-5.15.2.tar.xz",
-                    "sha256": "c8afca0e43d84f7bd595436fbe4d13a5bbdb81ec5104d605085d07545b6f91e0"
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtwebengine.git",
+                    "tag": "v5.15.2",
+                    "commit": "5537ff4437ea7a5f9ea140071343f88bf48deddc",
+                    "x-checker-data": {
+                        "type": "git",
+                        "tag-pattern": "^v(5\.15\.[\\d]+|5\.15\.[\\d]+-lts)?$"
+                    }
                 },
                 {
                     "type": "patch",
