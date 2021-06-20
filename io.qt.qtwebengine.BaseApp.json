@@ -65,8 +65,8 @@
                         {
                             "type": "git",
                             "url": "https://kernel.googlesource.com/pub/scm/utils/pciutils/pciutils",
-                            "tag": "v3.6.4",
-                            "commit": "61ecc14a327de030336f1ff3fea9c7e7e55a90ca",
+                            "tag": "v3.7.0",
+                            "commit": "864aecdea9c7db626856d8d452f6c784316a878c",
                             "x-checker-data": {
                                 "type": "git",
                                 "tag-pattern": "^v([\\d.]+)$"
@@ -85,11 +85,11 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtwebengine.git",
-                    "tag": "v5.15.2",
-                    "commit": "5537ff4437ea7a5f9ea140071343f88bf48deddc",
+                    "tag": "v5.15.5-lts",
+                    "commit": "9711f64c5082040cb76f6da5ef4a16037dbda08f",
                     "x-checker-data": {
                         "type": "git",
-                        "tag-pattern": "^v(5\.15\.[\\d]+|5\.15\.[\\d]+-lts)?$"
+                        "tag-pattern": "^v(5.15.[\\d]+|5.15.[\\d]+-lts)?$"
                     }
                 },
                 {
