@@ -45,7 +45,13 @@
                         {
                             "type": "archive",
                             "url": "https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz",
-                            "sha256": "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43"
+                            "sha256": "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 13255,
+                                "stable-only": true,
+                                "url-template": "https://www.python.org/ftp/python/$version/Python-$version.tar.xz"
+                            }
                         }
                     ]
                 },
@@ -63,13 +69,14 @@
                     ],
                     "sources": [
                         {
-                            "type": "git",
-                            "url": "https://kernel.googlesource.com/pub/scm/utils/pciutils/pciutils",
-                            "tag": "v3.7.0",
-                            "commit": "864aecdea9c7db626856d8d452f6c784316a878c",
+                            "type": "archive",
+                            "url": "https://mj.ucw.cz/download/linux/pci/pciutils-3.7.0.tar.gz",
+                            "sha256": "08c27e01030d1fcc700d02bc2ea66c638f58a3d150e45e58852aa82ad4160d84",
                             "x-checker-data": {
-                                "type": "git",
-                                "tag-pattern": "^v([\\d.]+)$"
+                                "type": "anitya",
+                                "project-id": 2605,
+                                "stable-only": true,
+                                "url-template": "https://mj.ucw.cz/download/linux/pci/pciutils-$version.tar.gz"
                             }
                         },
                         {
@@ -84,12 +91,15 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtwebengine.git",
+                    "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
                     "tag": "v5.15.5-lts",
                     "commit": "9711f64c5082040cb76f6da5ef4a16037dbda08f",
                     "x-checker-data": {
-                        "type": "git",
-                        "tag-pattern": "^v(5.15.[\\d]+|5.15.[\\d]+-lts)?$"
+                        "type": "json",
+                        "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
+                        "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts|v5.15[\\\\d.]+\" ) | .string)",
+                        "version-query": "$tag",
+                        "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
                     }
                 },
                 {
