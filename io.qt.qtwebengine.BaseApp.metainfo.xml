@@ -7,4 +7,7 @@
   <summary>Shared platform for applications that use Qt WebEngine</summary>
   <url type="homepage">https://qt.io</url>
   <project_group>KDE</project_group>
+  <releases>
+    <release version="5.15.5-lts" date="2021-06-21"/>
+  </releases>
 </component>

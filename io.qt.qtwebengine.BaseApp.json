@@ -3,11 +3,20 @@
     "branch": "5.15",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
+    "sdk-extensions": [
+        "org.freedesktop.Sdk.Extension.node14"
+    ],
     "runtime-version": "5.15",
     "modules": [
         {
             "name": "qt5-qtwebengine",
             "buildsystem": "qmake",
+            "build-options" : {
+                "append-path": "/usr/lib/sdk/node14/bin",
+                "env": [
+                  "npm_config_nodedir=/usr/lib/sdk/node14"
+                ]
+            },
             "cleanup": [
                 "/bin"
             ],
@@ -17,8 +26,9 @@
             "config-opts": [
                 "--",
                 "-system-ffmpeg",
-                "-webengine-proprietary-codecs",
                 "-webengine-icu",
+                "-webengine-proprietary-codecs",
+                "-webengine-webrtc-pipewire",
                 "-webp"
             ],
             "post-install": [
@@ -36,7 +46,13 @@
                         {
                             "type": "archive",
                             "url": "https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz",
-                            "sha256": "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43"
+                            "sha256": "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 13255,
+                                "stable-only": true,
+                                "url-template": "https://www.python.org/ftp/python/$version/Python-$version.tar.xz"
+                            }
                         }
                     ]
                 },
@@ -54,9 +70,15 @@
                     ],
                     "sources": [
                         {
-                            "type": "git",
-                            "url": "https://kernel.googlesource.com/pub/scm/utils/pciutils/pciutils",
-                            "branch": "v3.6.4"
+                            "type": "archive",
+                            "url": "https://mj.ucw.cz/download/linux/pci/pciutils-3.7.0.tar.gz",
+                            "sha256": "08c27e01030d1fcc700d02bc2ea66c638f58a3d150e45e58852aa82ad4160d84",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 2605,
+                                "stable-only": true,
+                                "url-template": "https://mj.ucw.cz/download/linux/pci/pciutils-$version.tar.gz"
+                            }
                         },
                         {
                             "type": "shell",
@@ -65,13 +87,63 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "name": "pipewire-0.2",
+                    "buildsystem": "meson",
+                    "config-opts": [
+                        "-D docs=false",
+                        "-D gstreamer=disabled",
+                        "-D man=false",
+                        "-D systemd=false"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/PipeWire/pipewire/archive/0.2.7.tar.gz",
+                            "sha256": "bfaa0f6ae6c0791e2e0b59234d399753bf24f1b33dbf587682363a8463dd8df1"
+                        }
+                    ],
+                    "cleanup": [
+                        "/bin",
+                        "/etc",
+                        "/include",
+                        "/lib/gstreamer-1.0",
+                        "/lib/pipewire-0.2/libpipewire-module-audio-dsp.so",
+                        "/lib/pipewire-0.2/libpipewire-module-autolink.so",
+                        "/lib/pipewire-0.2/libpipewire-module-link-factory.so",
+                        "/lib/pipewire-0.2/libpipewire-module-mixer.so",
+                        "/lib/pipewire-0.2/libpipewire-module-portal.so",
+                        "/lib/pipewire-0.2/libpipewire-module-rtkit.so",
+                        "/lib/pipewire-0.2/libpipewire-module-spa-monitor.so",
+                        "/lib/pipewire-0.2/libpipewire-module-spa-node-factory.so",
+                        "/lib/pipewire-0.2/libpipewire-module-spa-node.so",
+                        "/lib/pipewire-0.2/libpipewire-module-suspend-on-idle.so",
+                        "/lib/spa/alsa",
+                        "/lib/spa/audiomixer",
+                        "/lib/spa/audiotestsrc",
+                        "/lib/spa/ffmpeg",
+                        "/lib/spa/test",
+                        "/lib/spa/v4l2",
+                        "/lib/spa/videotestsrc",
+                        "/lib/spa/volume"
+                    ]
                 }
+
             ],
             "sources": [
                 {
-                    "type": "archive",
-                    "url": "http://download.qt.io/archive/qt/5.15/5.15.2/submodules/qtwebengine-everywhere-src-5.15.2.tar.xz",
-                    "sha256": "c8afca0e43d84f7bd595436fbe4d13a5bbdb81ec5104d605085d07545b6f91e0"
+                    "type": "git",
+                    "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
+                    "tag": "v5.15.5-lts",
+                    "commit": "9711f64c5082040cb76f6da5ef4a16037dbda08f",
+                    "x-checker-data": {
+                        "type": "json",
+                        "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
+                        "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts|v5.15[\\\\d.]+\" ) | .string)",
+                        "version-query": "$tag",
+                        "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
+                    }
                 },
                 {
                     "type": "patch",
