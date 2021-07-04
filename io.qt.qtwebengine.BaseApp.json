@@ -188,6 +188,7 @@
                 }
             ],
             "build-commands": [
+                "ARCH_TRIPLE=$(gcc --print-multiarch); qtver=$(qmake -query QT_VERSION); qtwebver=$(grep -o '5[0-9.]*' ${FLATPAK_DEST}/lib/${ARCH_TRIPLE}/cmake/Qt5WebEngine/Qt5WebEngineConfigVersion.cmake); lesser_ver=$(echo -e \"${qtver}\n${qtwebver}\" | sort -V | head -1); sed -i \"s/$qtwebver \\(\\${_Qt5WebEngine\\)/$lesser_ver \\1/\" ${FLATPAK_DEST}/lib/${ARCH_TRIPLE}/cmake/Qt5WebEngine*/Qt5WebEngine*Config.cmake",
                 "sed -e 's@PATHS \"${CMAKE_CURRENT_LIST_DIR}/..\" NO_DEFAULT_PATH@PATHS \"${CMAKE_CURRENT_LIST_DIR}/..\" \"/usr/lib/${CMAKE_CXX_LIBRARY_ARCHITECTURE}/cmake/\" NO_DEFAULT_PATH@' -i /app/lib/*/cmake/*/*Config.cmake",
                 "sed -e 's@$$QT_MODULE_LIB_BASE@/app/lib@' -i /app/lib/mkspecs/modules/*.pri",
                 "mv /app/lib/libexec/QtWebEngineProcess -t /app/bin",
