@@ -11,10 +11,10 @@
         {
             "name": "qt5-qtwebengine",
             "buildsystem": "qmake",
-            "build-options" : {
+            "build-options": {
                 "append-path": "/usr/lib/sdk/node14/bin",
                 "env": [
-                  "npm_config_nodedir=/usr/lib/sdk/node14"
+                    "npm_config_nodedir=/usr/lib/sdk/node14"
                 ]
             },
             "cleanup": [
@@ -129,14 +129,13 @@
                         "/lib/spa/volume"
                     ]
                 }
-
             ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v5.15.5-lts",
-                    "commit": "9711f64c5082040cb76f6da5ef4a16037dbda08f",
+                    "tag": "v5.15.6-lts",
+                    "commit": "2acbba86362ac3a1c2d8c20390dc263875f8f09c",
                     "x-checker-data": {
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
