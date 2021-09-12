@@ -1,12 +1,12 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "5.15",
+    "branch": "5.15-21.08",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.freedesktop.Sdk.Extension.node14"
     ],
-    "runtime-version": "5.15",
+    "runtime-version": "5.15-21.08",
     "modules": [
         {
             "name": "qt5-qtwebengine",
@@ -151,6 +151,38 @@
                 {
                     "type": "patch",
                     "path": "patches/resources.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/qt5-webengine-glibc-2.33.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-harfbuzz-3.0.0.patch",
+                    "options": [
+                        "--directory=src/3rdparty/chromium"
+                    ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-skia-harfbuzz-3.0.0.patch",
+                    "options": [
+                        "--directory=src/3rdparty/chromium/third_party/skia"
+                    ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-fix-in-tree-libxml2-build-with-icu-68.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-disable-thin-archives.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
                 }
             ]
         },
