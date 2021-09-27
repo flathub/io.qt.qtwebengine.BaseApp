@@ -1,12 +1,12 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "5.15",
+    "branch": "5.15-21.08",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.freedesktop.Sdk.Extension.node14"
     ],
-    "runtime-version": "5.15",
+    "runtime-version": "5.15-21.08",
     "modules": [
         {
             "name": "qt5-qtwebengine",
