@@ -137,6 +137,7 @@
                     "tag": "v5.15.6-lts",
                     "commit": "2acbba86362ac3a1c2d8c20390dc263875f8f09c",
                     "x-checker-data": {
+                        "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
                         "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts|v5.15[\\\\d.]+\" ) | .string)",
