@@ -137,6 +137,7 @@
                     "tag": "v5.15.6-lts",
                     "commit": "2acbba86362ac3a1c2d8c20390dc263875f8f09c",
                     "x-checker-data": {
+                        "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
                         "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts|v5.15[\\\\d.]+\" ) | .string)",
@@ -151,6 +152,38 @@
                 {
                     "type": "patch",
                     "path": "patches/resources.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/qt5-webengine-glibc-2.33.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-harfbuzz-3.0.0.patch",
+                    "options": [
+                        "--directory=src/3rdparty/chromium"
+                    ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-skia-harfbuzz-3.0.0.patch",
+                    "options": [
+                        "--directory=src/3rdparty/chromium/third_party/skia"
+                    ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-fix-in-tree-libxml2-build-with-icu-68.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-disable-thin-archives.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
                 }
             ]
         },
