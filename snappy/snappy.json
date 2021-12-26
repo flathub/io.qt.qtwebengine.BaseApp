@@ -1,0 +1,35 @@
+{
+    "name": "snappy",
+    "buildsystem": "cmake",
+    "build-options": {
+        "cxxflags": "-DNDEBUG"
+    },
+    "config-opts": [
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DSNAPPY_BUILD_TESTS=OFF",
+        "-DSNAPPY_BUILD_BENCHMARKS=OFF",
+        "-DSNAPPY_ENABLE_RTTI=ON"
+    ],
+    "sources": [
+        {
+            "type": "git",
+            "url": "https://github.com/google/snappy.git",
+            "tag": "1.1.9",
+            "commit": "2b63814b15a2aaae54b7943f0cd935892fae628f",
+            "x-checker-data": {
+                "type": "anitya",
+                "project-id": 4844,
+                "stable-only": true,
+                "tag-template": "$version"
+            }
+        },
+        {
+            "type": "patch",
+            "path": "add-inline-with-snappy_attribute_always_inline.patch"
+        },
+        {
+            "type": "patch",
+            "path": "add-option-to-enable-rtti-set-default-to-current-behavior.patch"
+        }
+    ]
+}

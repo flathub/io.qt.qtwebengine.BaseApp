@@ -1,149 +1,59 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "5.15-21.08",
+    "branch": "6.2",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.freedesktop.Sdk.Extension.node14"
     ],
-    "runtime-version": "5.15-21.08",
+    "runtime-version": "6.2",
+    "separate-locales": false,
     "modules": [
         {
-            "name": "qt5-qtwebengine",
-            "buildsystem": "qmake",
+            "name": "qt6-qtwebengine",
+            "buildsystem": "cmake-ninja",
+            "builddir": true,
             "build-options": {
                 "append-path": "/usr/lib/sdk/node14/bin",
                 "env": [
                     "npm_config_nodedir=/usr/lib/sdk/node14"
                 ]
             },
-            "cleanup": [
-                "/bin"
-            ],
-            "make-install-args": [
-                "INSTALL_ROOT=/app/scratchdir"
-            ],
             "config-opts": [
-                "--",
-                "-system-ffmpeg",
-                "-webengine-icu",
-                "-webengine-proprietary-codecs",
-                "-webengine-webrtc-pipewire",
-                "-webp"
+                "-DQT_FEATURE_webengine_kerberos=ON",
+                "-DQT_FEATURE_webengine_proprietary_codecs=ON",
+                "-DQT_FEATURE_webengine_system_ffmpeg=ON",
+                "-DQT_FEATURE_webengine_system_icu=ON",
+                "-DQT_FEATURE_webengine_system_libevent=ON",
+                "-DQT_FEATURE_webengine_webrtc_pipewire=ON",
+                "-DQT_FEATURE_qtpdf_build=ON",
+                "-DQT_FEATURE_qtpdf_widgets_build=ON",
+                "-DQT_FEATURE_qtpdf_quick_build=ON"
             ],
             "post-install": [
-                "cp -r /app/scratchdir/usr/* /app",
-                "rm -rf /app/scratchdir",
-                "ln -s /app/lib/*/*.so* /app/lib"
-            ],
-            "modules": [
-                {
-                    "name": "python2",
-                    "cleanup": [
-                        "*"
-                    ],
-                    "sources": [
-                        {
-                            "type": "archive",
-                            "url": "https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz",
-                            "sha256": "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43",
-                            "x-checker-data": {
-                                "type": "anitya",
-                                "project-id": 13255,
-                                "stable-only": true,
-                                "url-template": "https://www.python.org/ftp/python/$version/Python-$version.tar.xz"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "pciutils",
-                    "no-autogen": true,
-                    "make-args": [
-                        "SHARED=no",
-                        "ZLIB=no",
-                        "PREFIX=/app"
-                    ],
-                    "post-install": [
-                        "make install-pcilib",
-                        "make install-lib"
-                    ],
-                    "sources": [
-                        {
-                            "type": "archive",
-                            "url": "https://mj.ucw.cz/download/linux/pci/pciutils-3.7.0.tar.gz",
-                            "sha256": "08c27e01030d1fcc700d02bc2ea66c638f58a3d150e45e58852aa82ad4160d84",
-                            "x-checker-data": {
-                                "type": "anitya",
-                                "project-id": 2605,
-                                "stable-only": true,
-                                "url-template": "https://mj.ucw.cz/download/linux/pci/pciutils-$version.tar.gz"
-                            }
-                        },
-                        {
-                            "type": "shell",
-                            "commands": [
-                                "sed -i 's@PREFIX=/usr/local@PREFIX=/app@' Makefile"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "pipewire-0.2",
-                    "buildsystem": "meson",
-                    "config-opts": [
-                        "-D docs=false",
-                        "-D gstreamer=disabled",
-                        "-D man=false",
-                        "-D systemd=false"
-                    ],
-                    "sources": [
-                        {
-                            "type": "archive",
-                            "url": "https://github.com/PipeWire/pipewire/archive/0.2.7.tar.gz",
-                            "sha256": "bfaa0f6ae6c0791e2e0b59234d399753bf24f1b33dbf587682363a8463dd8df1"
-                        }
-                    ],
-                    "cleanup": [
-                        "/bin",
-                        "/etc",
-                        "/include",
-                        "/lib/gstreamer-1.0",
-                        "/lib/pipewire-0.2/libpipewire-module-audio-dsp.so",
-                        "/lib/pipewire-0.2/libpipewire-module-autolink.so",
-                        "/lib/pipewire-0.2/libpipewire-module-link-factory.so",
-                        "/lib/pipewire-0.2/libpipewire-module-mixer.so",
-                        "/lib/pipewire-0.2/libpipewire-module-portal.so",
-                        "/lib/pipewire-0.2/libpipewire-module-rtkit.so",
-                        "/lib/pipewire-0.2/libpipewire-module-spa-monitor.so",
-                        "/lib/pipewire-0.2/libpipewire-module-spa-node-factory.so",
-                        "/lib/pipewire-0.2/libpipewire-module-spa-node.so",
-                        "/lib/pipewire-0.2/libpipewire-module-suspend-on-idle.so",
-                        "/lib/spa/alsa",
-                        "/lib/spa/audiomixer",
-                        "/lib/spa/audiotestsrc",
-                        "/lib/spa/ffmpeg",
-                        "/lib/spa/test",
-                        "/lib/spa/v4l2",
-                        "/lib/spa/videotestsrc",
-                        "/lib/spa/volume"
-                    ]
-                }
+                "mv ${FLATPAK_DEST}/{libexec,bin}/QtWebEngineProcess",
+                "ln -sr ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/libQt*.so* -t ${FLATPAK_DEST}/lib/"
             ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v5.15.6-lts",
-                    "commit": "2acbba86362ac3a1c2d8c20390dc263875f8f09c",
+                    "tag": "v6.2.2",
+                    "commit": "432158aa0024fce9318df16b55604a9bc357fece",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
-                        "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts|v5.15[\\\\d.]+\" ) | .string)",
+                        "tag-query": "first(.[].name | match( \"v6.2[\\\\d.]+-lts|v6.2[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
                     }
+                },
+                {
+                    "type": "shell",
+                    "commands": [
+                        "sed -i '/find_package(Qt6/ s/${PROJECT_VERSION}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}/' $(find . -name CMakeLists.txt)"
+                    ]
                 },
                 {
                     "type": "patch",
@@ -155,36 +65,27 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/qt5-webengine-glibc-2.33.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/chromium-harfbuzz-3.0.0.patch",
-                    "options": [
-                        "--directory=src/3rdparty/chromium"
-                    ]
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/chromium-skia-harfbuzz-3.0.0.patch",
-                    "options": [
-                        "--directory=src/3rdparty/chromium/third_party/skia"
-                    ]
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/chromium-fix-in-tree-libxml2-build-with-icu-68.patch",
-                    "options": [
-                        "--directory=src/3rdparty"
-                    ]
-                },
-                {
-                    "type": "patch",
                     "path": "patches/chromium-disable-thin-archives.patch",
                     "options": [
                         "--directory=src/3rdparty"
                     ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-add-app-libdir.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
                 }
+            ],
+            "modules": [
+                "krb5/krb5.json",
+                "libevent/libevent.json",
+                "minizip/minizip.json",
+                "pciutils/pciutils.json",
+                "re2/re2.json",
+                "snappy/snappy.json",
+                "python2/python2.json"
             ]
         },
         {
@@ -200,33 +101,47 @@
                     "dest-filename": "cleanup-BaseApp.sh",
                     "//": "https://github.com/flatpak/flatpak-builder/issues/233",
                     "commands": [
-                        "export ARCH_TRIPLE=$(gcc --print-multiarch)",
-                        "rm -rfv /app/bin/pprof",
-                        "rm -rfv /app/include",
-                        "rm -rfv /app/lib/mkspecs",
-                        "rm -rfv /app/lib/pkgconfig",
-                        "rm -rfv /app/lib/plugins/designer",
-                        "rm -rfv /app/sbin",
-                        "rm -rfv /app/share/{metainfo,appdata}/io.qt.qtwebengine.BaseApp.*.xml",
-                        "rm -rfv /app/share/man",
-                        "rm -rfv /app/share/pci.ids",
-                        "rm -rfv /app/lib/${ARCH_TRIPLE}/cmake",
-                        "rm -rfv /app/lib/${ARCH_TRIPLE}/pkgconfig",
-                        "rm -rfv /app/lib/${ARCH_TRIPLE}/*.prl",
-                        "rm -rfv /app/lib/${ARCH_TRIPLE}/*.la",
-                        "rm -rfv /app/lib/*.a",
+                        "rm -rfv ${FLATPAK_DEST}/bin/event_rpcgen.py",
+                        "rm -rfv ${FLATPAK_DEST}/include",
+                        "rm -rfv ${FLATPAK_DEST}/lib/cmake",
+                        "rm -rfv ${FLATPAK_DEST}/lib/pkgconfig",
+                        "rm -rfv ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/cmake",
+                        "rm -rfv ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/metatypes",
+                        "rm -rfv ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/*.prl",
+                        "rm -rfv ${FLATPAK_DEST}/libexec/{gn,qwebengine_convert_dict}",
+                        "rmdir -v --ignore-fail-on-non-empty ${FLATPAK_DEST}/libexec",
+                        "rm -rfv ${FLATPAK_DEST}/mkspecs",
+                        "rm -rfv ${FLATPAK_DEST}/modules",
+                        "rm -rfv ${FLATPAK_DEST}/plugins/designer",
+                        "rm -rfv ${FLATPAK_DEST}/share/{metainfo,appdata}/io.qt.qtwebengine.BaseApp.*.xml",
                         "rm -rfv $(readlink -f \"$0\")"
+                    ]
+                },
+                {
+                    "type": "script",
+                    "dest-filename": "cmake_qtver_req_fix.sh",
+                    "commands": [
+                        "cmake_mod_path=${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/cmake",
+                        "qtver=$(qmake -query QT_VERSION)",
+                        "qtver0=$(echo $qtver | cut -d. -f1)",
+                        "qtver1=$(echo $qtver | cut -d. -f2)",
+                        "qtver_comm=${qtver0}.${qtver1}",
+                        "sed -i \"/^find_dependency(Qt6/ s/${qtver0}\\.${qtver1}\\.[0-9]\\+/${qtver_comm}/\" ${cmake_mod_path}/Qt6*/Qt6*Dependencies.cmake",
+                        "sed -i \"/^set(__qt_.*_target_deps/ s/${qtver0}\\.${qtver1}\\.[0-9]\\+/${qtver_comm}/g\" ${cmake_mod_path}/Qt6*/Qt6*Dependencies.cmake"
                     ]
                 }
             ],
             "build-commands": [
-                "ARCH_TRIPLE=$(gcc --print-multiarch); qtver=$(qmake -query QT_VERSION); qtwebver=$(grep -o '5[0-9.]*' ${FLATPAK_DEST}/lib/${ARCH_TRIPLE}/cmake/Qt5WebEngine/Qt5WebEngineConfigVersion.cmake); lesser_ver=$(echo -e \"${qtver}\n${qtwebver}\" | sort -V | head -1); sed -i \"s/$qtwebver \\(\\${_Qt5WebEngine\\)/$lesser_ver \\1/\" ${FLATPAK_DEST}/lib/${ARCH_TRIPLE}/cmake/Qt5WebEngine*/Qt5WebEngine*Config.cmake",
-                "sed -e 's@PATHS \"${CMAKE_CURRENT_LIST_DIR}/..\" NO_DEFAULT_PATH@PATHS \"${CMAKE_CURRENT_LIST_DIR}/..\" \"/usr/lib/${CMAKE_CXX_LIBRARY_ARCHITECTURE}/cmake/\" NO_DEFAULT_PATH@' -i /app/lib/*/cmake/*/*Config.cmake",
-                "sed -e 's@$$QT_MODULE_LIB_BASE@/app/lib@' -i /app/lib/mkspecs/modules/*.pri",
-                "mv /app/lib/libexec/QtWebEngineProcess -t /app/bin",
-                "install -Dm644 io.qt.qtwebengine.BaseApp.metainfo.xml -t /app/share/metainfo",
-                "install cleanup-BaseApp.sh -t /app"
+                "./cmake_qtver_req_fix.sh",
+                "sed -e '/find_dependency(Qt6/,/)/ s@\\(\"${CMAKE_CURRENT_LIST_DIR}/..\"\\)@\\1 \"/usr/lib/${CMAKE_CXX_LIBRARY_ARCHITECTURE}/cmake/\"@' -i ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/cmake/Qt6*/Qt6*Dependencies.cmake",
+                "sed -e 's@\\($$QT_MODULE_BIN_BASE\\)@\\1 '${FLATPAK_DEST}'/bin @' -i ${FLATPAK_DEST}/mkspecs/modules/*.pri",
+                "sed -e 's@\\($$QT_MODULE_INCLUDE_BASE \\)@\\1'${FLATPAK_DEST}'/include @' -i ${FLATPAK_DEST}/mkspecs/modules/*.pri",
+                "sed -e 's@$$QT_MODULE_INCLUDE_BASE/@'${FLATPAK_DEST}'/include/@g' -i ${FLATPAK_DEST}/mkspecs/modules/*.pri",
+                "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/mkspecs/modules/*.pri",
+                "install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo",
+                "install cleanup-BaseApp.sh -t ${FLATPAK_DEST}"
             ]
-        }
+        },
+        "qt6-webview/qt6-webview.json"
     ]
 }
