@@ -155,24 +155,6 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/qt5-webengine-glibc-2.33.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/chromium-harfbuzz-3.0.0.patch",
-                    "options": [
-                        "--directory=src/3rdparty/chromium"
-                    ]
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/chromium-skia-harfbuzz-3.0.0.patch",
-                    "options": [
-                        "--directory=src/3rdparty/chromium/third_party/skia"
-                    ]
-                },
-                {
-                    "type": "patch",
                     "path": "patches/chromium-fix-in-tree-libxml2-build-with-icu-68.patch",
                     "options": [
                         "--directory=src/3rdparty"
