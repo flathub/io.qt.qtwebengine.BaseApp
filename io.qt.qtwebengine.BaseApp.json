@@ -53,6 +53,18 @@
                     }
                 },
                 {
+                    "type": "shell",
+                    "commands": [
+                        "rm -rf src/3rdparty/chromium/third_party/catapult"
+                    ]
+                },
+                {
+                    "type": "git",
+                    "url": "https://chromium.googlesource.com/catapult",
+                    "commit": "5eedfe23148a234211ba477f76fc2ea2e8529189",
+                    "dest": "src/3rdparty/chromium/third_party/catapult"
+                },
+                {
                     "type": "patch",
                     "path": "patches/locales.patch"
                 },
@@ -84,6 +96,17 @@
                     "options": [
                         "--directory=src/3rdparty"
                     ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/python3.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-python3.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
                 }
             ],
             "modules": [
@@ -93,8 +116,7 @@
                 "pciutils/pciutils.json",
                 "pipewire-0.2/pipewire-0.2.json",
                 "re2/re2.json",
-                "snappy/snappy.json",
-                "python2/python2.json"
+                "snappy/snappy.json"
             ]
         },
         {
