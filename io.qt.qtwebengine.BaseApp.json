@@ -161,6 +161,7 @@
                 "install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo",
                 "install cleanup-BaseApp.sh -t ${FLATPAK_DEST}"
             ]
-        }
+        },
+        "qt5-webview/qt5-webview.json"
     ]
 }

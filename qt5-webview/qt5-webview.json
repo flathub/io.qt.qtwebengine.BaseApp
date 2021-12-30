@@ -1,0 +1,38 @@
+{
+    "name": "qt5-webview",
+    "buildsystem": "qmake",
+    "builddir": true,
+    "build-options": {
+        "env": [
+            "QMAKEPATH=/app/lib"
+        ]
+    },
+    "build-commands": [
+        "sed 's@\\($(INSTALL_ROOT)\\)/usr@\\1/'${FLATPAK_DEST}'@g' -i $(find . -name Makefile)"
+    ],
+    "post-install": [
+        "sed -i 's/\\([0-9]\\+\\.[0-9]\\+\\)\\.[0-9]\\+ ${_Qt5.*_FIND_VERSION_EXACT}/\\1/' ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/cmake/Qt5WebView*/Qt5WebView*Config.cmake",
+        "sed -e 's@PATHS \"${CMAKE_CURRENT_LIST_DIR}/..\" NO_DEFAULT_PATH@PATHS \"${CMAKE_CURRENT_LIST_DIR}/..\" \"/usr/lib/${CMAKE_CXX_LIBRARY_ARCHITECTURE}/cmake/\" NO_DEFAULT_PATH@' -i ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/cmake/Qt5WebView*/Qt5WebView*Config.cmake",
+        "sed -e '/^prefix=/ s@/usr@'${FLATPAK_DEST}'@' -i ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/pkgconfig/Qt5WebView*.pc",
+        "sed -e 's@\\($$QT_MODULE_BIN_BASE\\)@\\1 '${FLATPAK_DEST}'/bin @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
+        "sed -e 's@\\($$QT_MODULE_INCLUDE_BASE \\)@\\1'${FLATPAK_DEST}'/include @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
+        "sed -e 's@$$QT_MODULE_INCLUDE_BASE/@'${FLATPAK_DEST}'/include/@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
+        "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri"
+    ],
+    "sources": [
+        {
+            "type": "git",
+            "url": "https://invent.kde.org/qt/qt/qtwebview.git",
+            "tag": "v5.15.2",
+            "commit": "800926cc4e0ecfdb37a3b34486403354b66a37a4",
+            "x-checker-data": {
+                "is-main-source": true,
+                "type": "json",
+                "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebview/repository/tags",
+                "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts|v5.15[\\\\d.]+\" ) | .string)",
+                "version-query": "$tag | sub(\"^v\"; \"\")",
+                "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
+            }
+        }
+    ]
+}
