@@ -1,0 +1,13 @@
+diff --git a/chromium/build/config/linux/pkg-config.py b/chromium/build/config/linux/pkg-config.py
+index 5adf70cc3bb..35f61d9f326 100755
+--- a/chromium/build/config/linux/pkg-config.py
++++ b/chromium/build/config/linux/pkg-config.py
+@@ -213,7 +213,7 @@ def main():
+   includes = []
+   cflags = []
+   libs = []
+-  lib_dirs = []
++  lib_dirs = [ "/app/lib" ]
+ 
+   for flag in all_flags[:]:
+     if len(flag) == 0 or MatchesAnyRegexp(flag, strip_out):

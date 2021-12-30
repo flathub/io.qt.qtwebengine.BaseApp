@@ -1,0 +1,12 @@
+diff --git a/src/buildtools/configure.json b/src/buildtools/configure.json
+index 88d1790c..5d6bef02 100644
+--- a/src/buildtools/configure.json
++++ b/src/buildtools/configure.json
+@@ -228,6 +228,7 @@
+             },
+             "headers": "snappy.h",
+             "sources": [
++                { "type": "pkgConfig", "args": "snappy" },
+                 "-lsnappy"
+             ]
+         },
