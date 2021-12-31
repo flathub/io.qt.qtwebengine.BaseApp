@@ -13,15 +13,13 @@
         {
             "name": "qt5-qtwebengine",
             "buildsystem": "qmake",
+            "builddir": true,
             "build-options": {
                 "append-path": "/usr/lib/sdk/node14/bin",
                 "env": [
                     "npm_config_nodedir=/usr/lib/sdk/node14"
                 ]
             },
-            "make-install-args": [
-                "INSTALL_ROOT=/app/scratchdir"
-            ],
             "config-opts": [
                 "--",
                 "-system-ffmpeg",
@@ -31,10 +29,11 @@
                 "-webengine-webrtc-pipewire",
                 "-webp"
             ],
+            "build-commands": [
+                 "sed 's@\\($(INSTALL_ROOT)\\)/usr@\\1'${FLATPAK_DEST}'@g' -i $(find . -name 'Makefile*')"
+            ],
             "post-install": [
                 "mv ${FLATPAK_DEST}/{lib/libexec,bin}/QtWebEngineProcess",
-                "cp -r ${FLATPAK_DEST}/scratchdir/usr/* ${FLATPAK_DEST}",
-                "rm -rf ${FLATPAK_DEST}/scratchdir",
                 "ln -sr ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/libQt*.so* -t ${FLATPAK_DEST}/lib/"
             ],
             "sources": [
