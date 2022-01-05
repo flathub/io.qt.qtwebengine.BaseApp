@@ -1,4 +1,5 @@
 {
     "automerge-flathubbot-prs": false,
+    "publish-delay-hours": 1,
     "skip-appstream-check": true
 }
