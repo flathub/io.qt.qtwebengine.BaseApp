@@ -30,7 +30,7 @@
                 "-webp"
             ],
             "build-commands": [
-                 "sed 's@\\($(INSTALL_ROOT)\\)/usr@\\1'${FLATPAK_DEST}'@g' -i $(find . -name 'Makefile*')"
+                "sed 's@\\($(INSTALL_ROOT)\\)/usr@\\1'${FLATPAK_DEST}'@g' -i $(find . -name 'Makefile*')"
             ],
             "post-install": [
                 "mv ${FLATPAK_DEST}/{lib/libexec,bin}/QtWebEngineProcess",
@@ -40,8 +40,8 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v5.15.7-lts",
-                    "commit": "f0a1cb8da24518c03858b85378f9ad82b0603a1a",
+                    "tag": "v5.15.8-lts",
+                    "commit": "96e932d73057c3e705b849249fb02e1837b7576d",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
