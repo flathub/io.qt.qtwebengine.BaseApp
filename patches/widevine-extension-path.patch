@@ -1,0 +1,13 @@
+diff --git a/src/core/content_client_qt.cpp b/src/core/content_client_qt.cpp
+index 560cdbf5..75553590 100644
+--- a/src/core/content_client_qt.cpp
++++ b/src/core/content_client_qt.cpp
+@@ -353,6 +353,8 @@ static bool IsWidevineAvailable(base::FilePath *cdm_path,
+     }
+ #elif defined(Q_OS_LINUX)
+         pluginPaths << QStringLiteral("/opt/google/chrome/libwidevinecdm.so") // Old Google Chrome
++                    << QStringLiteral("/app/webengine/extensions/Widevine/extra/_platform_specific/linux_arm64/libwidevinecdm.so")
++                    << QStringLiteral("/app/webengine/extensions/Widevine/extra/_platform_specific/linux_x64/libwidevinecdm.so")
+ #if Q_PROCESSOR_WORDSIZE == 8
+                     << QStringLiteral("/opt/google/chrome/WidevineCdm/_platform_specific/linux_x64/libwidevinecdm.so")
+ #else

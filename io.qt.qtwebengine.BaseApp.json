@@ -8,6 +8,15 @@
     ],
     "runtime-version": "5.15-21.08",
     "separate-locales": false,
+    "add-extensions": {
+        "io.qt.qtwebengine.Extension": {
+            "directory": "webengine/extensions",
+            "version": "5.15-21.08",
+            "subdirectories": true,
+            "no-autodownload": true,
+            "autodelete": true
+        }
+    },
     "command": "QtWebEngineProcess",
     "modules": [
         {
@@ -74,6 +83,10 @@
                 {
                     "type": "patch",
                     "path": "patches/snappy-detection.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/widevine-extension-path.patch"
                 },
                 {
                     "type": "patch",
@@ -157,6 +170,7 @@
                 "sed -e 's@\\($$QT_MODULE_INCLUDE_BASE \\)@\\1'${FLATPAK_DEST}'/include @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/*.pri",
                 "sed -e 's@$$QT_MODULE_INCLUDE_BASE/@'${FLATPAK_DEST}'/include/@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/*.pri",
                 "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/*.pri",
+                "install -dm755 ${FLATPAK_DEST}/webengine/extensions",
                 "install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo",
                 "install cleanup-BaseApp.sh -t ${FLATPAK_DEST}"
             ]
