@@ -4,6 +4,7 @@
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
+        "org.kde.Sdk.Locale",
         "org.freedesktop.Sdk.Extension.node14"
     ],
     "runtime-version": "5.15-21.08",
@@ -62,6 +63,10 @@
                     "url": "https://chromium.googlesource.com/catapult",
                     "commit": "5eedfe23148a234211ba477f76fc2ea2e8529189",
                     "dest": "src/3rdparty/chromium/third_party/catapult"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/dictionaries.patch"
                 },
                 {
                     "type": "patch",
@@ -161,6 +166,7 @@
                 "install cleanup-BaseApp.sh -t ${FLATPAK_DEST}"
             ]
         },
+        "qtwebengine-dictionaries/qtwebengine-dictionaries.json",
         "qt5-webview/qt5-webview.json"
     ]
 }
