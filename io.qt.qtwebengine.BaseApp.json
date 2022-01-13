@@ -4,6 +4,7 @@
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
+        "org.kde.Sdk.Locale",
         "org.freedesktop.Sdk.Extension.node14"
     ],
     "runtime-version": "6.2",
@@ -54,6 +55,10 @@
                     "commands": [
                         "sed -i '/find_package(Qt6/ s/${PROJECT_VERSION}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}/' $(find . -name CMakeLists.txt)"
                     ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/dictionaries.patch"
                 },
                 {
                     "type": "patch",
@@ -130,6 +135,7 @@
                 "install cleanup-BaseApp.sh -t ${FLATPAK_DEST}"
             ]
         },
+        "qtwebengine-dictionaries/qtwebengine-dictionaries.json",
         "qt6-webview/qt6-webview.json"
     ]
 }
