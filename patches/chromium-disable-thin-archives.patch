@@ -1,9 +1,11 @@
---- a/chromium/build/config/compiler/BUILD.gn	2021-10-06 14:14:23.931831253 +0300
-+++ b/chromium/build/config/compiler/BUILD.gn	2021-10-06 14:14:33.208380239 +0300
-@@ -1803,7 +1803,7 @@
-   # have a "thin archive" mode (it does accept -T, but it means truncating
-   # archive names to 16 characters, which is not what we want).
-   if ((is_posix && !is_nacl && !is_apple) || is_fuchsia) {
+diff --git a/chromium/build/config/compiler/BUILD.gn b/chromium/build/config/compiler/BUILD.gn
+index bad5e9f1822..f3a39121488 100644
+--- a/chromium/build/config/compiler/BUILD.gn
++++ b/chromium/build/config/compiler/BUILD.gn
+@@ -1898,7 +1898,7 @@ config("thin_archive") {
+   # The macOS and iOS default linker ld64 does not support reading thin
+   # archives.
+   if ((is_posix && !is_nacl && (!is_apple || use_lld)) || is_fuchsia) {
 -    arflags = [ "-T" ]
 +    arflags = []
    } else if (is_win && use_lld) {
