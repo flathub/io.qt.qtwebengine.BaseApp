@@ -1,0 +1,14 @@
+diff --git a/src/core/web_engine_library_info.cpp b/src/core/web_engine_library_info.cpp
+index 3a649227..d6266124 100644
+--- a/src/core/web_engine_library_info.cpp
++++ b/src/core/web_engine_library_info.cpp
+@@ -254,6 +254,9 @@ QString dictionariesPath()
+             candidatePaths << frameworkDictionariesPath;
+ #endif
+ 
++            QString flatpakDictionariesPath = "/app/qtwebengine_dictionaries";
++            candidatePaths << flatpakDictionariesPath;
++
+             QString libraryDictionariesPath = QLibraryInfo::location(QLibraryInfo::DataPath)
+                     % QDir::separator() % QLatin1String("qtwebengine_dictionaries");
+             candidatePaths << libraryDictionariesPath;
