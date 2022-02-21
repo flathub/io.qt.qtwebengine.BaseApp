@@ -111,6 +111,13 @@
                     "options": [
                         "--directory=src/3rdparty"
                     ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-pipewire03.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
                 }
             ],
             "modules": [
@@ -118,7 +125,6 @@
                 "libevent/libevent.json",
                 "minizip/minizip.json",
                 "pciutils/pciutils.json",
-                "pipewire-0.2/pipewire-0.2.json",
                 "re2/re2.json",
                 "snappy/snappy.json"
             ]
