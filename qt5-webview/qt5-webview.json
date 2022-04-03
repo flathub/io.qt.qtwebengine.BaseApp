@@ -23,13 +23,12 @@
         {
             "type": "git",
             "url": "https://invent.kde.org/qt/qt/qtwebview.git",
-            "tag": "v5.15.2",
-            "commit": "800926cc4e0ecfdb37a3b34486403354b66a37a4",
+            "tag": "v5.15.3-lts-lgpl",
+            "commit": "ec4de0cec2299f4ae0228ea2c71011e0520ca40e",
             "x-checker-data": {
-                "is-main-source": true,
                 "type": "json",
                 "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebview/repository/tags",
-                "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts|v5.15[\\\\d.]+\" ) | .string)",
+                "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+(-lts-lgpl|-lts)?\" ) | .string)",
                 "version-query": "$tag | sub(\"^v\"; \"\")",
                 "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
             }

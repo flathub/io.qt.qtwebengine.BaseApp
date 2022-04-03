@@ -50,7 +50,15 @@
                         "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts|v5.15[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
-                    }
+                    },
+                    "disable-submodules": true
+                },
+                {
+                    "type": "git",
+                    "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
+                    "branch": "87-based",
+                    "commit": "d13d0924c4e18ecc4b79adf0fec142ee9a9eaa14",
+                    "dest": "src/3rdparty"
                 },
                 {
                     "type": "shell",
