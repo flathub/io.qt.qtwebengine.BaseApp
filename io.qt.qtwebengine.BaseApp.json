@@ -33,6 +33,7 @@
             ],
             "post-install": [
                 "mv ${FLATPAK_DEST}/{libexec,bin}/QtWebEngineProcess",
+                "ln -sr ${FLATPAK_DEST}/{libexec,bin}/qwebengine_convert_dict",
                 "ln -sr ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/libQt*.so* -t ${FLATPAK_DEST}/lib/"
             ],
             "sources": [
@@ -107,6 +108,7 @@
                     "//": "https://github.com/flatpak/flatpak-builder/issues/233",
                     "commands": [
                         "rm -rfv ${FLATPAK_DEST}/bin/event_rpcgen.py",
+                        "rm -rfv ${FLATPAK_DEST}/bin/qwebengine_convert_dict",
                         "rm -rfv ${FLATPAK_DEST}/include",
                         "rm -rfv ${FLATPAK_DEST}/lib/cmake",
                         "rm -rfv ${FLATPAK_DEST}/lib/pkgconfig",
