@@ -40,8 +40,8 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.2.4",
-                    "commit": "acb01cacff784d51f97e8be16e57f89ebc2722f9",
+                    "tag": "v6.3.0-rc1",
+                    "commit": "a42e9ff235b9e3208020f17fe67509ab113b61d2",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
@@ -55,14 +55,14 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "branch": "90-based",
-                    "commit": "0336deeef1a026a74c1148a8272e7230b60243cf",
+                    "branch": "94-based",
+                    "commit": "5cd4e9af5765778abc0380fc0fc6e06c43fcdfe9",
                     "dest": "src/3rdparty"
                 },
                 {
                     "type": "shell",
                     "commands": [
-                        "sed -i '/find_package(Qt6/ s/${PROJECT_VERSION}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}/' $(find . -name CMakeLists.txt)"
+                        "sed -i '/find_package(Qt6/ s/${PROJECT_VERSION}/${PROJECT_VERSION_MAJOR}/' $(find . -name CMakeLists.txt)"
                     ]
                 },
                 {
@@ -90,9 +90,9 @@
                 "libevent/libevent.json",
                 "minizip/minizip.json",
                 "pciutils/pciutils.json",
+                "python-html5lib/python-html5lib.json",
                 "re2/re2.json",
-                "snappy/snappy.json",
-                "python2/python2.json"
+                "snappy/snappy.json"
             ]
         },
         {
