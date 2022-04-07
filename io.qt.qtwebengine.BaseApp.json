@@ -28,9 +28,9 @@
                 "-DQT_FEATURE_webengine_system_icu=ON",
                 "-DQT_FEATURE_webengine_system_libevent=ON",
                 "-DQT_FEATURE_webengine_webrtc_pipewire=ON",
-                "-DQT_FEATURE_qtpdf_build=ON",
-                "-DQT_FEATURE_qtpdf_widgets_build=ON",
-                "-DQT_FEATURE_qtpdf_quick_build=ON"
+                "-DQT_FEATURE_qtpdf_build=OFF",
+                "-DQT_FEATURE_qtpdf_widgets_build=OFF",
+                "-DQT_FEATURE_qtpdf_quick_build=OFF"
             ],
             "post-install": [
                 "mv ${FLATPAK_DEST}/{libexec,bin}/QtWebEngineProcess",
