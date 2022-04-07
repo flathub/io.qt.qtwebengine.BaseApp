@@ -6,12 +6,16 @@
         "arch": {
             "aarch64": {
                 "config-opts": [
-                    "-D_qt_additional_packages_prefix_paths=/app/lib/aarch64-linux-gnu/cmake"
+                    "-D_qt_additional_packages_prefix_paths=/app/lib/aarch64-linux-gnu/cmake",
+                    "-DQT_NO_PACKAGE_VERSION_CHECK=TRUE",
+                    "-DQT_NO_PACKAGE_VERSION_INCOMPATIBLE_WARNING=TRUE"
                 ]
             },
             "x86_64": {
                 "config-opts": [
-                    "-D_qt_additional_packages_prefix_paths=/app/lib/x86_64-linux-gnu/cmake"
+                    "-D_qt_additional_packages_prefix_paths=/app/lib/x86_64-linux-gnu/cmake",
+                    "-DQT_NO_PACKAGE_VERSION_CHECK=TRUE",
+                    "-DQT_NO_PACKAGE_VERSION_INCOMPATIBLE_WARNING=TRUE"
                 ]
             }
         }

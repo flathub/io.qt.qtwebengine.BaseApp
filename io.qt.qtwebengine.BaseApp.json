@@ -139,6 +139,7 @@
                 "install cleanup-BaseApp.sh -t ${FLATPAK_DEST}"
             ]
         },
-        "qtwebengine-dictionaries/qtwebengine-dictionaries.json"
+        "qtwebengine-dictionaries/qtwebengine-dictionaries.json",
+        "qt6-webview/qt6-webview.json"
     ]
 }
