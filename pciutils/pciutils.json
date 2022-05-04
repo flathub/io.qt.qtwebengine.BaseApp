@@ -16,8 +16,8 @@
     "sources": [
         {
             "type": "archive",
-            "url": "https://mj.ucw.cz/download/linux/pci/pciutils-3.7.0.tar.gz",
-            "sha256": "08c27e01030d1fcc700d02bc2ea66c638f58a3d150e45e58852aa82ad4160d84",
+            "url": "https://mj.ucw.cz/download/linux/pci/pciutils-3.8.0.tar.gz",
+            "sha256": "3f398d983aab42f3872e4e0ee9ecb1f0fd68f028e00246aa2ca7c3a7408d6fab",
             "x-checker-data": {
                 "type": "anitya",
                 "project-id": 2605,
