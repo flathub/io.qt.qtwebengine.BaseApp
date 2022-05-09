@@ -1,0 +1,13 @@
+diff --git a/src/core/configure/BUILD.root.gn.in b/src/core/configure/BUILD.root.gn.in
+index 0e8ce19..ff56b62 100644
+--- a/src/core/configure/BUILD.root.gn.in
++++ b/src/core/configure/BUILD.root.gn.in
+@@ -202,6 +202,8 @@ source_set("qtwebengine_spellcheck_sources") {
+ }
+ 
+ source_set("qtwebengine_sources") {
++  flatpak_arch = getenv("FLATPAK_ARCH")
++  include_dirs = [ "/usr/include/dbus-1.0", "/usr/lib/${flatpak_arch}-linux-gnu/dbus-1.0/include" ]
+   configs += [
+     ":cpp17_config",
+     "//skia:skia_config",
