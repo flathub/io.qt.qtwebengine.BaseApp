@@ -1,5 +1,5 @@
 {
-    "automerge-flathubbot-prs": false,
+    "automerge-flathubbot-prs": true,
     "disable-external-data-checker": true,
     "skip-appstream-check": true
 }
