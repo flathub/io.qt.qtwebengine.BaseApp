@@ -79,6 +79,10 @@
                 },
                 {
                     "type": "patch",
+                    "path": "patches/flatpak-includedir-dbus.patch"
+                },
+                {
+                    "type": "patch",
                     "path": "patches/chromium-add-app-libdir.patch",
                     "options": [
                         "--directory=src/3rdparty"
