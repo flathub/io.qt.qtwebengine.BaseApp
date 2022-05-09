@@ -83,6 +83,27 @@
                     "options": [
                         "--directory=src/3rdparty"
                     ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-add-initial-sandbox-support.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-flatpak-adjust-paths-for-the-sandbox.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-flatpak-expose-widevine-into-the-sandbox.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
                 }
             ],
             "modules": [
