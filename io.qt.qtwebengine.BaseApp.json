@@ -57,7 +57,7 @@
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
                     "branch": "87-based",
-                    "commit": "23e13d55d841cba357828a425038d35729cfa427",
+                    "commit": "0d984c7f044a08975088191f92ecc9bc62424b14",
                     "dest": "src/3rdparty"
                 },
                 {
