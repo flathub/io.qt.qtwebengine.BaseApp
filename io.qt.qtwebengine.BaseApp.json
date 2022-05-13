@@ -1,13 +1,13 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "6.2",
+    "branch": "6.3",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
         "org.freedesktop.Sdk.Extension.node14"
     ],
-    "runtime-version": "6.2",
+    "runtime-version": "6.3",
     "separate-locales": false,
     "modules": [
         {
@@ -24,8 +24,10 @@
                 "-DQT_FEATURE_webengine_kerberos=ON",
                 "-DQT_FEATURE_webengine_proprietary_codecs=ON",
                 "-DQT_FEATURE_webengine_system_ffmpeg=ON",
+                "-DQT_FEATURE_webengine_system_freetype=ON",
                 "-DQT_FEATURE_webengine_system_icu=ON",
                 "-DQT_FEATURE_webengine_system_libevent=ON",
+                "-DQT_FEATURE_webengine_system_libxml=OFF",
                 "-DQT_FEATURE_webengine_webrtc_pipewire=ON",
                 "-DQT_FEATURE_qtpdf_build=ON",
                 "-DQT_FEATURE_qtpdf_widgets_build=ON",
@@ -40,16 +42,24 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.2.4",
-                    "commit": "acb01cacff784d51f97e8be16e57f89ebc2722f9",
+                    "tag": "v6.3.1",
+                    "commit": "b981601dedffaa21b474e3acf254e77a490c9173",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
-                        "tag-query": "first(.[].name | match( \"v6.2[\\\\d.]+-lts|v6.2[\\\\d.]+\" ) | .string)",
+                        "tag-query": "first(.[].name | match( \"v6.3[\\\\d.]+-lts|v6.3[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
-                    }
+                    },
+                    "disable-submodules": true
+                },
+                {
+                    "type": "git",
+                    "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
+                    "branch": "94-based",
+                    "commit": "5f9753749b6c138c1d5bc390006396e9a65b19a1",
+                    "dest": "src/3rdparty"
                 },
                 {
                     "type": "shell",
@@ -107,9 +117,9 @@
                 "libevent/libevent.json",
                 "minizip/minizip.json",
                 "pciutils/pciutils.json",
+                "python-html5lib/python-html5lib.json",
                 "re2/re2.json",
-                "snappy/snappy.json",
-                "python2/python2.json"
+                "snappy/snappy.json"
             ]
         },
         {
