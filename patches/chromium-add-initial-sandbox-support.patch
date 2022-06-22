@@ -1,9 +1,38 @@
+From 0f867b7ce895894d10331bd54201c0264e2252b4 Mon Sep 17 00:00:00 2001
+From: Ryan Gonzalez <rymg19@gmail.com>
+Date: Wed, 22 Jun 2022 23:15:54 +0300
+Subject: [PATCH] flatpak: Add initial sandbox support
+
+---
+ chromium/base/threading/thread_restrictions.h |   6 +
+ .../sandbox_internals/sandbox_internals.js    |   4 +
+ .../ui/webui/sandbox/sandbox_internals_ui.cc  |   6 +-
+ .../zygote_host/zygote_host_impl_linux.cc     |  39 +-
+ .../zygote_host/zygote_host_impl_linux.h      |   1 +
+ .../content/common/child_process_host_impl.cc |   8 +-
+ chromium/content/zygote/zygote_linux.cc       |   6 +-
+ chromium/content/zygote/zygote_linux.h        |   2 +
+ chromium/content/zygote/zygote_main_linux.cc  |  16 +-
+ chromium/sandbox/linux/BUILD.gn               |   9 +-
+ .../sandbox/linux/services/flatpak_pid_map.cc |  57 ++
+ .../sandbox/linux/services/flatpak_pid_map.h  |  46 ++
+ .../sandbox/linux/services/flatpak_sandbox.cc | 577 ++++++++++++++++++
+ .../sandbox/linux/services/flatpak_sandbox.h  | 119 ++++
+ .../sandbox/policy/linux/sandbox_linux.cc     |   8 +
+ chromium/sandbox/policy/linux/sandbox_linux.h |   7 +
+ .../service_process_launcher.cc               |  12 +-
+ 17 files changed, 905 insertions(+), 18 deletions(-)
+ create mode 100644 chromium/sandbox/linux/services/flatpak_pid_map.cc
+ create mode 100644 chromium/sandbox/linux/services/flatpak_pid_map.h
+ create mode 100644 chromium/sandbox/linux/services/flatpak_sandbox.cc
+ create mode 100644 chromium/sandbox/linux/services/flatpak_sandbox.h
+
 diff --git a/chromium/base/threading/thread_restrictions.h b/chromium/base/threading/thread_restrictions.h
-index ce16488c6..b1d4b70d8 100644
+index 088e966c994..1751e8acc28 100644
 --- a/chromium/base/threading/thread_restrictions.h
 +++ b/chromium/base/threading/thread_restrictions.h
-@@ -286,6 +286,10 @@ namespace resource_coordinator {
- class TabManagerDelegate;
+@@ -301,6 +301,10 @@ class ScopedAllowThreadJoinForWebRtcTransport;
+ }
  }
  
 +namespace sandbox {
@@ -13,15 +42,15 @@ index ce16488c6..b1d4b70d8 100644
  namespace service_manager {
  class ServiceProcessLauncher;
  }
-@@ -416,6 +420,7 @@ class BASE_EXPORT ScopedAllowBlocking {
-   friend class printing::PrintJobWorker;
+@@ -442,6 +446,7 @@ class BASE_EXPORT ScopedAllowBlocking {
+   friend class remote_cocoa::
+       DroppedScreenShotCopierMac;  // https://crbug.com/1148078
    friend class remoting::ScopedBypassIOThreadRestrictions;  // crbug.com/1144161
-   friend class resource_coordinator::TabManagerDelegate;  // crbug.com/778703
 +  friend class sandbox::FlatpakSandbox;
    friend class web::WebSubThread;
    friend class weblayer::BrowserContextImpl;
    friend class weblayer::ContentBrowserClientImpl;
-@@ -489,6 +494,7 @@ class BASE_EXPORT ScopedAllowBaseSyncPrimitives {
+@@ -514,6 +519,7 @@ class BASE_EXPORT ScopedAllowBaseSyncPrimitives {
    friend class rlz_lib::FinancialPing;
    friend class shell_integration_linux::
        LaunchXdgUtilityScopedAllowBaseSyncPrimitives;
@@ -30,7 +59,7 @@ index ce16488c6..b1d4b70d8 100644
    friend class syncer::GetLocalChangesRequest;
    friend class webrtc::DesktopConfigurationMonitor;
 diff --git a/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.js b/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.js
-index 4fa81a019..aaeba2d7d 100644
+index 4fa81a01909..aaeba2d7d0e 100644
 --- a/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.js
 +++ b/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.js
 @@ -139,6 +139,7 @@ function androidHandler() {
@@ -52,7 +81,7 @@ index 4fa81a019..aaeba2d7d 100644
  
    addStatusRow('Layer 1 Sandbox', layer1SandboxType, layer1SandboxCssClass);
 diff --git a/chromium/chrome/browser/ui/webui/sandbox/sandbox_internals_ui.cc b/chromium/chrome/browser/ui/webui/sandbox/sandbox_internals_ui.cc
-index 1456b7cd4..0a86212f2 100644
+index f6520a7ae7d..369464ad4c3 100644
 --- a/chromium/chrome/browser/ui/webui/sandbox/sandbox_internals_ui.cc
 +++ b/chromium/chrome/browser/ui/webui/sandbox/sandbox_internals_ui.cc
 @@ -13,6 +13,7 @@
@@ -83,7 +112,7 @@ index 1456b7cd4..0a86212f2 100644
                       status & sandbox::policy::SandboxLinux::kNetNS;
    // A second-layer sandbox is also required to be adequately sandboxed.
 diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-index 6870307d8..8b423c041 100644
+index 74f482289bc..d2216f4d10a 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 +++ b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 @@ -13,11 +13,13 @@
@@ -180,7 +209,7 @@ index 6870307d8..8b423c041 100644
      if (!base::AdjustOOMScore(pid, score))
        PLOG(ERROR) << "Failed to adjust OOM score of renderer with pid " << pid;
 diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.h b/chromium/content/browser/zygote_host/zygote_host_impl_linux.h
-index 21b8323eb..c69d687f8 100644
+index 21b8323eb49..c69d687f8e8 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.h
 +++ b/chromium/content/browser/zygote_host/zygote_host_impl_linux.h
 @@ -60,6 +60,7 @@ class CONTENT_EXPORT ZygoteHostImpl : public ZygoteHost {
@@ -192,10 +221,10 @@ index 21b8323eb..c69d687f8 100644
  
    // This lock protects the |zygote_pids_| set.
 diff --git a/chromium/content/common/child_process_host_impl.cc b/chromium/content/common/child_process_host_impl.cc
-index fe07a994d..845a3efba 100644
+index 8dda040d2d5..6bc72b6d30d 100644
 --- a/chromium/content/common/child_process_host_impl.cc
 +++ b/chromium/content/common/child_process_host_impl.cc
-@@ -40,6 +40,7 @@
+@@ -39,6 +39,7 @@
  
  #if defined(OS_LINUX) || defined(OS_CHROMEOS)
  #include "base/linux_util.h"
@@ -203,7 +232,7 @@ index fe07a994d..845a3efba 100644
  #elif defined(OS_MAC)
  #include "base/mac/foundation_util.h"
  #include "content/common/mac_helpers.h"
-@@ -75,7 +76,12 @@ base::FilePath ChildProcessHost::GetChildPath(int flags) {
+@@ -74,7 +75,12 @@ base::FilePath ChildProcessHost::GetChildPath(int flags) {
  #if defined(OS_LINUX) || defined(OS_CHROMEOS)
    // Use /proc/self/exe rather than our known binary path so updates
    // can't swap out the binary from underneath us.
@@ -217,26 +246,8 @@ index fe07a994d..845a3efba 100644
      child_path = base::FilePath(base::kProcSelfExe);
  #endif
  
-@@ -302,7 +308,7 @@ bool ChildProcessHostImpl::OnMessageReceived(const IPC::Message& msg) {
-   }
- 
-   if (!handled) {
--      handled = delegate_->OnMessageReceived(msg);
-+    handled = delegate_->OnMessageReceived(msg);
-   }
- 
- #if BUILDFLAG(IPC_MESSAGE_LOG_ENABLED)
-@@ -316,7 +322,7 @@ void ChildProcessHostImpl::OnChannelConnected(int32_t peer_pid) {
-   if (!peer_process_.IsValid()) {
-     peer_process_ = base::Process::OpenWithExtraPrivileges(peer_pid);
-     if (!peer_process_.IsValid())
--       peer_process_ = delegate_->GetProcess().Duplicate();
-+      peer_process_ = delegate_->GetProcess().Duplicate();
-     DCHECK(peer_process_.IsValid());
-   }
-   opening_channel_ = false;
 diff --git a/chromium/content/zygote/zygote_linux.cc b/chromium/content/zygote/zygote_linux.cc
-index f2512d63b..a2d95816b 100644
+index 582b0fd490b..d90eddcd142 100644
 --- a/chromium/content/zygote/zygote_linux.cc
 +++ b/chromium/content/zygote/zygote_linux.cc
 @@ -116,7 +116,7 @@ bool Zygote::ProcessRequests() {
@@ -260,7 +271,7 @@ index f2512d63b..a2d95816b 100644
    std::vector<base::ScopedFD> fds;
    char buf[kZygoteMaxMessageLength];
 diff --git a/chromium/content/zygote/zygote_linux.h b/chromium/content/zygote/zygote_linux.h
-index d186e7197..f86e02578 100644
+index cf713acee5f..f8d12684c11 100644
 --- a/chromium/content/zygote/zygote_linux.h
 +++ b/chromium/content/zygote/zygote_linux.h
 @@ -62,6 +62,8 @@ class Zygote {
@@ -273,7 +284,7 @@ index d186e7197..f86e02578 100644
    // ---------------------------------------------------------------------------
    // Requests from the browser...
 diff --git a/chromium/content/zygote/zygote_main_linux.cc b/chromium/content/zygote/zygote_main_linux.cc
-index 80245df42..e8918cbda 100644
+index 5afca4f2fb3..8fc9a7bb613 100644
 --- a/chromium/content/zygote/zygote_main_linux.cc
 +++ b/chromium/content/zygote/zygote_main_linux.cc
 @@ -34,6 +34,7 @@
@@ -336,7 +347,7 @@ index 80245df42..e8918cbda 100644
                  base::GlobalDescriptors::Descriptor(
                      static_cast<uint32_t>(kSandboxIPCChannel), GetSandboxFD()));
 diff --git a/chromium/sandbox/linux/BUILD.gn b/chromium/sandbox/linux/BUILD.gn
-index ccbbc9171..020784af0 100644
+index ccbbc91716e..020784af07d 100644
 --- a/chromium/sandbox/linux/BUILD.gn
 +++ b/chromium/sandbox/linux/BUILD.gn
 @@ -333,6 +333,10 @@ if (is_linux || is_chromeos) {
@@ -364,16 +375,15 @@ index ccbbc9171..020784af0 100644
      "//base/third_party/dynamic_annotations",
 diff --git a/chromium/sandbox/linux/services/flatpak_pid_map.cc b/chromium/sandbox/linux/services/flatpak_pid_map.cc
 new file mode 100644
-index 000000000..d8a2e0c38
+index 00000000000..58b2ab55238
 --- /dev/null
 +++ b/chromium/sandbox/linux/services/flatpak_pid_map.cc
-@@ -0,0 +1,58 @@
+@@ -0,0 +1,57 @@
 +// Copyright 2020 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
 +#include "sandbox/linux/services/flatpak_pid_map.h"
-+#include "base/optional.h"
 +
 +namespace sandbox {
 +
@@ -388,35 +398,35 @@ index 000000000..d8a2e0c38
 +  return true;
 +}
 +
-+base::Optional<pid_t> FlatpakPidMap::FindRelativeByExternal(pid_t external) {
++absl::optional<pid_t> FlatpakPidMap::FindRelativeByExternal(pid_t external) {
 +  return FindImpl(&external_to_relative_, external);
 +}
 +
-+base::Optional<pid_t> FlatpakPidMap::FindExternalByRelative(pid_t relative) {
++absl::optional<pid_t> FlatpakPidMap::FindExternalByRelative(pid_t relative) {
 +  return FindImpl(&relative_to_external_, relative);
 +}
 +
-+base::Optional<pid_t> FlatpakPidMap::DeleteByExternal(pid_t external) {
++absl::optional<pid_t> FlatpakPidMap::DeleteByExternal(pid_t external) {
 +  return DeleteImpl(&external_to_relative_, &relative_to_external_, external);
 +}
 +
-+base::Optional<pid_t> FlatpakPidMap::DeleteByRelative(pid_t relative) {
++absl::optional<pid_t> FlatpakPidMap::DeleteByRelative(pid_t relative) {
 +  return DeleteImpl(&relative_to_external_, &external_to_relative_, relative);
 +}
 +
-+base::Optional<pid_t> FlatpakPidMap::FindImpl(base::flat_map<pid_t, pid_t>* map,
++absl::optional<pid_t> FlatpakPidMap::FindImpl(base::flat_map<pid_t, pid_t>* map,
 +                                              pid_t key) {
 +  auto it = map->find(key);
-+  return it != map->end() ? it->second : base::Optional<pid_t>();
++  return it != map->end() ? it->second : absl::optional<pid_t>();
 +}
 +
-+base::Optional<pid_t> FlatpakPidMap::DeleteImpl(
++absl::optional<pid_t> FlatpakPidMap::DeleteImpl(
 +    base::flat_map<pid_t, pid_t>* map,
 +    base::flat_map<pid_t, pid_t>* reversed,
 +    pid_t key) {
 +  auto it = map->find(key);
 +  if (it == map->end()) {
-+    return base::Optional<pid_t>();
++    return absl::optional<pid_t>();
 +  }
 +
 +  pid_t value = it->second;
@@ -428,7 +438,7 @@ index 000000000..d8a2e0c38
 +}  // namespace sandbox
 diff --git a/chromium/sandbox/linux/services/flatpak_pid_map.h b/chromium/sandbox/linux/services/flatpak_pid_map.h
 new file mode 100644
-index 000000000..16b27437a
+index 00000000000..22799eb42f7
 --- /dev/null
 +++ b/chromium/sandbox/linux/services/flatpak_pid_map.h
 @@ -0,0 +1,46 @@
@@ -440,7 +450,7 @@ index 000000000..16b27437a
 +#define SANDBOX_LINUX_SERVICES_FLATPAK_PID_MAP_H_
 +
 +#include "base/containers/flat_map.h"
-+#include "base/optional.h"
++#include "third_party/abseil-cpp/absl/types/optional.h"
 +
 +namespace sandbox {
 +
@@ -459,15 +469,15 @@ index 000000000..16b27437a
 +
 +  bool Insert(PidPair pair);
 +
-+  base::Optional<pid_t> FindRelativeByExternal(pid_t external);
-+  base::Optional<pid_t> FindExternalByRelative(pid_t relative);
++  absl::optional<pid_t> FindRelativeByExternal(pid_t external);
++  absl::optional<pid_t> FindExternalByRelative(pid_t relative);
 +
-+  base::Optional<pid_t> DeleteByRelative(pid_t relative);
-+  base::Optional<pid_t> DeleteByExternal(pid_t external);
++  absl::optional<pid_t> DeleteByRelative(pid_t relative);
++  absl::optional<pid_t> DeleteByExternal(pid_t external);
 +
 + private:
-+  base::Optional<pid_t> FindImpl(base::flat_map<pid_t, pid_t>* map, pid_t key);
-+  base::Optional<pid_t> DeleteImpl(base::flat_map<pid_t, pid_t>* map,
++  absl::optional<pid_t> FindImpl(base::flat_map<pid_t, pid_t>* map, pid_t key);
++  absl::optional<pid_t> DeleteImpl(base::flat_map<pid_t, pid_t>* map,
 +                                   base::flat_map<pid_t, pid_t>* reversed,
 +                                   pid_t key);
 +
@@ -480,10 +490,10 @@ index 000000000..16b27437a
 +#endif
 diff --git a/chromium/sandbox/linux/services/flatpak_sandbox.cc b/chromium/sandbox/linux/services/flatpak_sandbox.cc
 new file mode 100644
-index 000000000..475e7a291
+index 00000000000..7b6d9c24257
 --- /dev/null
 +++ b/chromium/sandbox/linux/services/flatpak_sandbox.cc
-@@ -0,0 +1,578 @@
+@@ -0,0 +1,577 @@
 +// Copyright 2019 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -498,7 +508,6 @@ index 000000000..475e7a291
 +#include "base/files/file_path.h"
 +#include "base/files/file_util.h"
 +#include "base/logging.h"
-+#include "base/optional.h"
 +#include "base/process/process_handle.h"
 +#include "base/strings/string_number_conversions.h"
 +#include "base/strings/string_util.h"
@@ -714,7 +723,7 @@ index 000000000..475e7a291
 +  if (!bus_thread_.IsRunning()) {
 +    base::Thread::Options options;
 +    options.message_pump_type = base::MessagePumpType::IO;
-+    CHECK(bus_thread_.StartWithOptions(options));
++    CHECK(bus_thread_.StartWithOptions(std::move(options)));
 +
 +    bus_thread_.task_runner()->PostTask(
 +        FROM_HERE, base::BindOnce(&FlatpakSandbox::InitializeBusThread,
@@ -726,16 +735,16 @@ index 000000000..475e7a291
 +  // Note that destruction of the bus is not a concern, because once the
 +  // thread dies its bus connection will be terminated anyway and the
 +  // portal will notice.
-+  static base::NoDestructor<dbus::Bus*> bus([] {
++  static base::NoDestructor<scoped_refptr<dbus::Bus>> bus([] {
 +    dbus::Bus::Options options;
 +    options.bus_type = dbus::Bus::SESSION;
 +    options.connection_type = dbus::Bus::PRIVATE;
 +    options.dbus_task_runner = base::SequencedTaskRunnerHandle::Get();
 +
-+    return new dbus::Bus(options);
++    return base::MakeRefCounted<dbus::Bus>(options);
 +  }());
 +
-+  return *bus;
++  return bus->get();
 +}
 +
 +dbus::ObjectProxy* FlatpakSandbox::GetPortalObjectProxy() {
@@ -1064,7 +1073,7 @@ index 000000000..475e7a291
 +}  // namespace sandbox
 diff --git a/chromium/sandbox/linux/services/flatpak_sandbox.h b/chromium/sandbox/linux/services/flatpak_sandbox.h
 new file mode 100644
-index 000000000..fc8a77d40
+index 00000000000..8def31e9ce2
 --- /dev/null
 +++ b/chromium/sandbox/linux/services/flatpak_sandbox.h
 @@ -0,0 +1,119 @@
@@ -1081,7 +1090,6 @@ index 000000000..fc8a77d40
 +#include "base/containers/flat_set.h"
 +#include "base/macros.h"
 +#include "base/no_destructor.h"
-+#include "base/optional.h"
 +#include "base/process/kill.h"
 +#include "base/process/launch.h"
 +#include "base/process/process_handle.h"
@@ -1093,6 +1101,7 @@ index 000000000..fc8a77d40
 +#include "dbus/message.h"
 +#include "sandbox/linux/services/flatpak_pid_map.h"
 +#include "sandbox/sandbox_export.h"
++#include "third_party/abseil-cpp/absl/types/optional.h"
 +
 +namespace sandbox {
 +
@@ -1167,7 +1176,7 @@ index 000000000..fc8a77d40
 +
 +  base::ProcessId GetRelativePid(base::ProcessId external_pid);
 +
-+  base::Optional<SandboxLevel> sandbox_level_;
++  absl::optional<SandboxLevel> sandbox_level_;
 +  base::Thread bus_thread_;
 +
 +  base::Lock process_info_lock_;
@@ -1188,7 +1197,7 @@ index 000000000..fc8a77d40
 +
 +#endif  // SANDBOX_LINUX_SERVICES_FLATPAK_SANDBOX_H_
 diff --git a/chromium/sandbox/policy/linux/sandbox_linux.cc b/chromium/sandbox/policy/linux/sandbox_linux.cc
-index 5f6089876..deec9a046 100644
+index a525f9b489d..de1e4269ab2 100644
 --- a/chromium/sandbox/policy/linux/sandbox_linux.cc
 +++ b/chromium/sandbox/policy/linux/sandbox_linux.cc
 @@ -33,6 +33,7 @@
@@ -1221,7 +1230,7 @@ index 5f6089876..deec9a046 100644
  
      // We report whether the sandbox will be activated when renderers, workers
 diff --git a/chromium/sandbox/policy/linux/sandbox_linux.h b/chromium/sandbox/policy/linux/sandbox_linux.h
-index a7b9453eb..f9e952388 100644
+index 8acc0b14cc0..d48150c940f 100644
 --- a/chromium/sandbox/policy/linux/sandbox_linux.h
 +++ b/chromium/sandbox/policy/linux/sandbox_linux.h
 @@ -12,6 +12,7 @@
@@ -1253,7 +1262,7 @@ index a7b9453eb..f9e952388 100644
    std::unique_ptr<SetuidSandboxClient> setuid_sandbox_client_;
  #if BUILDFLAG(USING_SANITIZER)
 diff --git a/chromium/services/service_manager/service_process_launcher.cc b/chromium/services/service_manager/service_process_launcher.cc
-index 05d4a7a29..81b1e004f 100644
+index 72a2161d61c..3b2f2c7235a 100644
 --- a/chromium/services/service_manager/service_process_launcher.cc
 +++ b/chromium/services/service_manager/service_process_launcher.cc
 @@ -38,6 +38,7 @@
@@ -1264,7 +1273,7 @@ index 05d4a7a29..81b1e004f 100644
  #include "sandbox/linux/services/namespace_sandbox.h"
  #endif
  
-@@ -271,8 +272,15 @@ void ServiceProcessLauncher::ProcessState::StopInBackground() {
+@@ -273,8 +274,15 @@ void ServiceProcessLauncher::ProcessState::StopInBackground() {
      return;
  
    int rv = -1;
@@ -1282,3 +1291,6 @@ index 05d4a7a29..81b1e004f 100644
    child_process_.Close();
  }
  
+-- 
+2.36.1
+
