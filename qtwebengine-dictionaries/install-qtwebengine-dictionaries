@@ -9,15 +9,15 @@ RUNTIME_DICTDIR=/usr/share/hunspell
 
 install -dm755 ${QTWEBENGINE_DICTDIR}
 
-# for each hundpell dictionary
+# for each hunspell dictionary
 for f in ${RUNTIME_DICTDIR}/*.dic; do
   loc=$(basename $f | sed 's/\.dic//')
   loc_short=${loc%_*}
   echo
   echo "Converting ${loc} Hunspell dictionary to a QtWebEngine dictionary..."
 
-  # English locales are kept in the app, and not packaged as locale extensions,
-  # so these should be real files or symlinks to a target in the same folder
+  # English locales are kept in the app, and are not packaged as locale extensions,
+  # so these should be real files or symlinks to targets in the same folder
   if [ $loc_short = en ]; then
 
     # locale is a symlink, dictionary conversion is unneeded, so just create a similar symlink
@@ -27,14 +27,14 @@ for f in ${RUNTIME_DICTDIR}/*.dic; do
       ln -s ${real_loc}.bdic ${QTWEBENGINE_DICTDIR}/${loc}.bdic
 
     else
-      # try to convert and install if successful
+      # try to convert and install only if successful
       if qwebengine_convert_dict $f ${loc}.bdic; then
         install -Dm644 ${loc}.bdic -t ${QTWEBENGINE_DICTDIR}/
       fi
 
     fi
   else
-    # avoid crashes on tabss and IGNORE directives, https://bugs.chromium.org/p/chromium/issues/detail?id=165056
+    # avoid crashes on tabs and IGNORE directives, https://bugs.chromium.org/p/chromium/issues/detail?id=165056
     if grep -Pq '^IGNORE|\t' ${RUNTIME_DICTDIR}/${loc}.aff; then
       echo "Applying workarounds to ${loc} affix file..."
       cp ${RUNTIME_DICTDIR}/${loc}.{aff,dic} ./
