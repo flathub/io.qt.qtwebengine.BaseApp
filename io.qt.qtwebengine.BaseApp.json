@@ -49,15 +49,7 @@
                         "tag-query": "first(.[].name | match( \"v6.2[\\\\d.]+-lts|v6.2[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
-                    },
-                    "disable-submodules": true
-                },
-                {
-                    "type": "git",
-                    "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "branch": "90-based",
-                    "commit": "3e8444fbf852db7b5470e2088cec378547100215",
-                    "dest": "src/3rdparty"
+                    }
                 },
                 {
                     "type": "shell",
