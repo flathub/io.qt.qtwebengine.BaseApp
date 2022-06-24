@@ -17,7 +17,8 @@
         "sed -e 's@\\($$QT_MODULE_BIN_BASE\\)@\\1 '${FLATPAK_DEST}'/bin @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
         "sed -e 's@\\($$QT_MODULE_INCLUDE_BASE \\)@\\1'${FLATPAK_DEST}'/include @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
         "sed -e 's@$$QT_MODULE_INCLUDE_BASE/@'${FLATPAK_DEST}'/include/@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
-        "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri"
+        "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
+        "ln -sr ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/libQt*WebView.so* -t ${FLATPAK_DEST}/lib/"
     ],
     "sources": [
         {
