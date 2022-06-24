@@ -27,6 +27,7 @@
             "tag": "v5.15.5-lts-lgpl",
             "commit": "429096eb954672d3727a3e8cc83832bc79cf7967",
             "x-checker-data": {
+                "is-important": true,
                 "type": "json",
                 "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebview/repository/tags",
                 "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+(-lts-lgpl|-lts)?\" ) | .string)",
