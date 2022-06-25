@@ -23,4 +23,4 @@ jobs:
           EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: --update --never-fork io.qt.qtwebengine.BaseApp.json
+          args: --update --never-fork --require-important-update io.qt.qtwebengine.BaseApp.json
