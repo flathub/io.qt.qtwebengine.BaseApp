@@ -29,9 +29,9 @@
                 "-DQT_FEATURE_webengine_system_libevent=ON",
                 "-DQT_FEATURE_webengine_system_libxml=OFF",
                 "-DQT_FEATURE_webengine_webrtc_pipewire=ON",
-                "-DQT_FEATURE_qtpdf_build=ON",
-                "-DQT_FEATURE_qtpdf_widgets_build=ON",
-                "-DQT_FEATURE_qtpdf_quick_build=ON"
+                "-DQT_FEATURE_qtpdf_build=OFF",
+                "-DQT_FEATURE_qtpdf_widgets_build=OFF",
+                "-DQT_FEATURE_qtpdf_quick_build=OFF"
             ],
             "post-install": [
                 "mv ${FLATPAK_DEST}/{libexec,bin}/QtWebEngineProcess",
@@ -42,8 +42,8 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.3.1",
-                    "commit": "b981601dedffaa21b474e3acf254e77a490c9173",
+                    "tag": "v6.4.0-beta1",
+                    "commit": "f3d4ee7ebbbe1ffeacbdc4f2042caaae23dd2964",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
@@ -57,12 +57,12 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "commit": "5f9753749b6c138c1d5bc390006396e9a65b19a1",
+                    "commit": "2c4b80c2a640797a4ffd1c2265c0209f2d8d10e1",
                     "dest": "src/3rdparty",
                     "x-checker-data": {
                         "is-important": true,
                         "type": "json",
-                        "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine-chromium/repository/commits?ref_name=94-based",
+                        "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine-chromium/repository/commits?ref_name=98-based",
                         "commit-query": "first( .[].id )",
                         "version-query": "first( .[].short_id )",
                         "timestamp-query": "first( .[].committed_date )"
@@ -71,7 +71,7 @@
                 {
                     "type": "shell",
                     "commands": [
-                        "sed -i '/find_package(Qt6/ s/${PROJECT_VERSION}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}/' $(find . -name CMakeLists.txt)"
+                        "sed -i '/find_package(Qt6/ s/${PROJECT_VERSION}/${PROJECT_VERSION_MAJOR}/' $(find . -name CMakeLists.txt)"
                     ]
                 },
                 {
