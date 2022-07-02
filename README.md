@@ -1,5 +1,3 @@
-# Redemption
+# QtWebEngine BaseApp
 
-Yes. This is a hack. I also am not happy about it.
-
-Python2 is dead but chromium (hence QtWebEngine) still needs it. We have to live with it. This is how I'm coping.
+Please visit [the wiki](https://github.com/flathub/io.qt.qtwebengine.BaseApp/wiki) for more details and examples.

@@ -17,15 +17,17 @@
         "sed -e 's@\\($$QT_MODULE_BIN_BASE\\)@\\1 '${FLATPAK_DEST}'/bin @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
         "sed -e 's@\\($$QT_MODULE_INCLUDE_BASE \\)@\\1'${FLATPAK_DEST}'/include @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
         "sed -e 's@$$QT_MODULE_INCLUDE_BASE/@'${FLATPAK_DEST}'/include/@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
-        "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri"
+        "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_webview*.pri",
+        "ln -sr ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/libQt*WebView.so* -t ${FLATPAK_DEST}/lib/"
     ],
     "sources": [
         {
             "type": "git",
             "url": "https://invent.kde.org/qt/qt/qtwebview.git",
-            "tag": "v5.15.4-lts-lgpl",
-            "commit": "826d2a33929c69807917536d48b7861e7682001e",
+            "tag": "v5.15.5-lts-lgpl",
+            "commit": "429096eb954672d3727a3e8cc83832bc79cf7967",
             "x-checker-data": {
+                "is-important": true,
                 "type": "json",
                 "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebview/repository/tags",
                 "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+(-lts-lgpl|-lts)?\" ) | .string)",
