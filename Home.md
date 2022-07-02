@@ -5,6 +5,7 @@ quickly and easily package applications that depend on this module.
 
 If you just found this base application, then you might also be interested in the [PyQt base application](https://github.com/flathub/com.riverbankcomputing.PyQt.BaseApp).
 
+*To help improving this documentation, open a pull request against the [wiki branch](https://github.com/flathub/io.qt.qtwebengine.BaseApp/tree/wiki).*
 
 ## Features
 
