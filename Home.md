@@ -51,7 +51,7 @@ build-options:
     QTWEBENGINE_CHROMIUM_FLAGS: --no-sandbox
 ```
 
-Flatpak sandboxing support for Chromium was developed by [Ryan Gonzalez](https://refi64.com/) for the [Chromium Flatpak application](https://github.com/flathub/org.chromium.Chromium).
+*Flatpak sandboxing support for Chromium was developed by [Ryan Gonzalez](https://refi64.com/) for the [Chromium Flatpak application](https://github.com/flathub/org.chromium.Chromium).*
 
 
 ## Example QtWebEngine Application
