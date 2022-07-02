@@ -1,4 +1,5 @@
 {
     "automerge-flathubbot-prs": false,
+    "require-important-update": true,
     "skip-appstream-check": true
 }
