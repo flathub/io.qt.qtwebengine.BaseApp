@@ -5,7 +5,7 @@
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
-        "org.freedesktop.Sdk.Extension.node14"
+        "org.freedesktop.Sdk.Extension.node18"
     ],
     "runtime-version": "5.15-22.08",
     "separate-locales": false,
@@ -16,9 +16,9 @@
             "buildsystem": "qmake",
             "builddir": true,
             "build-options": {
-                "append-path": "/usr/lib/sdk/node14/bin",
+                "append-path": "/usr/lib/sdk/node18/bin",
                 "env": [
-                    "npm_config_nodedir=/usr/lib/sdk/node14"
+                    "npm_config_nodedir=/usr/lib/sdk/node18"
                 ]
             },
             "config-opts": [
