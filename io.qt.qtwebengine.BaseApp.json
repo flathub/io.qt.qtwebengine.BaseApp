@@ -1,13 +1,13 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "5.15-21.08",
+    "branch": "5.15-22.08",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
-        "org.freedesktop.Sdk.Extension.node14"
+        "org.freedesktop.Sdk.Extension.node18"
     ],
-    "runtime-version": "5.15-21.08",
+    "runtime-version": "5.15-22.08",
     "separate-locales": false,
     "command": "QtWebEngineProcess",
     "modules": [
@@ -16,9 +16,9 @@
             "buildsystem": "qmake",
             "builddir": true,
             "build-options": {
-                "append-path": "/usr/lib/sdk/node14/bin",
+                "append-path": "/usr/lib/sdk/node18/bin",
                 "env": [
-                    "npm_config_nodedir=/usr/lib/sdk/node14"
+                    "npm_config_nodedir=/usr/lib/sdk/node18"
                 ]
             },
             "config-opts": [
@@ -115,14 +115,13 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/chromium-python3.patch",
-                    "options": [
-                        "--directory=src/3rdparty"
-                    ]
-                },
-                {
                     "type": "patch",
-                    "path": "patches/chromium-pipewire03.patch",
+                    "paths": [
+                        "patches/chromium-python3.patch",
+                        "patches/chromium-pipewire03.patch",
+                        "patches/chromium-python310.patch",
+                        "patches/chromium-ffmpeg5.patch"
+                    ],
                     "options": [
                         "--directory=src/3rdparty"
                     ]
