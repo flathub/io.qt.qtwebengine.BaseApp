@@ -42,8 +42,8 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.3.1",
-                    "commit": "b981601dedffaa21b474e3acf254e77a490c9173",
+                    "tag": "v6.3.2",
+                    "commit": "ed4d0677fae30829babae63ab458cf06ceeb89ee",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
@@ -57,7 +57,7 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "commit": "1df1a4d9a77f27e6065839562b95fefa12b1def4",
+                    "commit": "cee5373e6119a7ee20ba5e941185f4a22104d46d",
                     "dest": "src/3rdparty",
                     "x-checker-data": {
                         "is-important": true,
