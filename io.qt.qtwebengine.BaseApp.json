@@ -23,7 +23,6 @@
             },
             "config-opts": [
                 "--",
-                "-system-ffmpeg",
                 "-webengine-icu",
                 "-webengine-kerberos",
                 "-webengine-proprietary-codecs",
@@ -115,12 +114,11 @@
                 },
                 {
                     "type": "patch",
-                    "type": "patch",
                     "paths": [
                         "patches/chromium-python3.patch",
                         "patches/chromium-pipewire03.patch",
                         "patches/chromium-python310.patch",
-                        "patches/chromium-ffmpeg5.patch"
+                        "patches/qtwebengine-chromium-gcc12.patch"
                     ],
                     "options": [
                         "--directory=src/3rdparty"
