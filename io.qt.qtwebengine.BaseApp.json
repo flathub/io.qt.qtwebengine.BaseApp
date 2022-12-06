@@ -1,13 +1,13 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "6.3",
+    "branch": "6.4",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
-        "org.freedesktop.Sdk.Extension.node14"
+        "org.freedesktop.Sdk.Extension.node18"
     ],
-    "runtime-version": "6.3",
+    "runtime-version": "6.4",
     "separate-locales": false,
     "modules": [
         {
@@ -15,9 +15,9 @@
             "buildsystem": "cmake-ninja",
             "builddir": true,
             "build-options": {
-                "append-path": "/usr/lib/sdk/node14/bin",
+                "append-path": "/usr/lib/sdk/node18/bin",
                 "env": [
-                    "npm_config_nodedir=/usr/lib/sdk/node14"
+                    "npm_config_nodedir=/usr/lib/sdk/node18"
                 ]
             },
             "config-opts": [
@@ -57,7 +57,7 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "commit": "1df1a4d9a77f27e6065839562b95fefa12b1def4",
+                    "commit": "be349eaf62e77955791d7bf29f893f1e8a37daf4",
                     "dest": "src/3rdparty",
                     "x-checker-data": {
                         "is-important": true,
@@ -89,6 +89,14 @@
                 {
                     "type": "patch",
                     "path": "patches/flatpak-includedir-dbus.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/chromium-python310.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/qtwebengine-chromium-gcc12.patch"
                 },
                 {
                     "type": "patch",
