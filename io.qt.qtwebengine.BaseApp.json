@@ -3,6 +3,7 @@
     "branch": "6.4",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
+    "command": "QtWebEngineProcess",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
         "org.freedesktop.Sdk.Extension.node18"
