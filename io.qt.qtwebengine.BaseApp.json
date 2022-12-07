@@ -96,7 +96,7 @@
                     "path": "patches/qtwebengine-chromium-gcc12.patch",
                     "options": [
                         "--directory=src/3rdparty"
-                    }]
+                    ]
                 },
                 {
                     "type": "patch",
