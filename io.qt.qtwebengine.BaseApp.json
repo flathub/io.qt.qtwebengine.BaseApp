@@ -93,10 +93,6 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/chromium-python310.patch"
-                },
-                {
-                    "type": "patch",
                     "path": "patches/qtwebengine-chromium-gcc12.patch"
                 },
                 {
