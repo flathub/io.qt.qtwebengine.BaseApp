@@ -96,14 +96,14 @@
                     "path": "patches/qtwebengine-chromium-gcc12.patch",
                     "options": [
                         "--directory=src/3rdparty"
-                    }
+                    }]
                 },
                 {
                     "type": "patch",
                     "path": "patches/chromium-python310.patch",
                     "options": [
                         "--directory=src/3rdparty"
-                    }
+                    ]
                 },
                 {
                     "type": "patch",
