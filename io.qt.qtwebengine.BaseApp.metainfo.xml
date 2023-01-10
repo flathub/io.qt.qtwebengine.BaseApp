@@ -8,6 +8,7 @@
   <url type="homepage">https://qt.io</url>
   <project_group>KDE</project_group>
   <releases>
+    <release version="5.15.12-lts" date="2022-12-09"/>
     <release version="5.15.10-lts" date="2022-05-24"/>
     <release version="5.15.9-lts" date="2022-03-30"/>
     <release version="5.15.8-lts" date="2021-12-15"/>
