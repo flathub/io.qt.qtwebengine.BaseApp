@@ -97,13 +97,6 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/chromium-fix-in-tree-libxml2-build-with-icu-68.patch",
-                    "options": [
-                        "--directory=src/3rdparty"
-                    ]
-                },
-                {
-                    "type": "patch",
                     "path": "patches/chromium-add-app-libdir.patch",
                     "options": [
                         "--directory=src/3rdparty"
