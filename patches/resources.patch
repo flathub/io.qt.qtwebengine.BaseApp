@@ -1,13 +1,14 @@
 diff --git a/src/core/web_engine_library_info.cpp b/src/core/web_engine_library_info.cpp
-index befa7ae0..d742583a 100644
+index 151918bd7..1d1bf1f17 100644
 --- a/src/core/web_engine_library_info.cpp
 +++ b/src/core/web_engine_library_info.cpp
-@@ -281,7 +281,7 @@ QString resourcesDataPath()
+@@ -339,8 +339,7 @@ QString resourcesPath()
  #if defined(OS_MAC) && defined(QT_MAC_FRAMEWORK_BUILD)
-             getResourcesPath(frameworkBundle());
- #else
--            QLibraryInfo::path(QLibraryInfo::DataPath) % QLatin1String("/resources");
-+            QLatin1String("/app/resources");
+             candidatePaths << getResourcesPath(frameworkBundle());
  #endif
-     if (!initialized) {
-         initialized = true;
+-            candidatePaths << QLibraryInfo::path(QLibraryInfo::DataPath) % QDir::separator()
+-                            % QLatin1String("resources");
++            candidatePaths << QLatin1String("/app/resources");
+             candidatePaths << QLibraryInfo::path(QLibraryInfo::DataPath);
+             candidatePaths << QCoreApplication::applicationDirPath();
+             candidatePaths << fallbackDir();

@@ -1,13 +1,15 @@
 diff --git a/src/core/web_engine_library_info.cpp b/src/core/web_engine_library_info.cpp
-index 6b11cf0c..befa7ae0 100644
+index 151918bd7..2e619e133 100644
 --- a/src/core/web_engine_library_info.cpp
 +++ b/src/core/web_engine_library_info.cpp
-@@ -208,7 +208,7 @@ QString localesPath()
- #if defined(OS_MAC) && defined(QT_MAC_FRAMEWORK_BUILD)
-             getResourcesPath(frameworkBundle()) % QLatin1String("/qtwebengine_locales");
- #else
--            QLibraryInfo::path(QLibraryInfo::TranslationsPath) % QDir::separator() % QLatin1String("qtwebengine_locales");
-+            "/app/translations/qtwebengine_locales";
+@@ -238,8 +238,7 @@ QString localesPath()
+             candidatePaths << getResourcesPath(frameworkBundle()) % QDir::separator()
+                             % QLatin1String("qtwebengine_locales");
  #endif
+-            candidatePaths << QLibraryInfo::path(QLibraryInfo::TranslationsPath) % QDir::separator()
+-                            % QLatin1String("qtwebengine_locales");
++            candidatePaths << "/app/translations/qtwebengine_locales";
+             candidatePaths << fallbackDir();
+         }
  
      if (!initialized) {
