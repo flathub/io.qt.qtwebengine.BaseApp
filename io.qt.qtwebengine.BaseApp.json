@@ -27,7 +27,7 @@
                 "-DQT_FEATURE_webengine_system_freetype=ON",
                 "-DQT_FEATURE_webengine_system_icu=ON",
                 "-DQT_FEATURE_webengine_system_libevent=ON",
-                "-DQT_FEATURE_webengine_system_libxml=OFF",
+                "-DQT_FEATURE_webengine_system_libxml=ON",
                 "-DQT_FEATURE_webengine_webrtc_pipewire=ON",
                 "-DQT_FEATURE_qtpdf_build=ON",
                 "-DQT_FEATURE_qtpdf_widgets_build=ON",
