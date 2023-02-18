@@ -99,7 +99,7 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/chromium-add-initial-sandbox-support.patch",
+                    "path": "patches/chromium-flatpak-add-initial-sandbox-support.patch",
                     "options": [
                         "--directory=src/3rdparty"
                     ]
