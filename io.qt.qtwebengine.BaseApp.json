@@ -42,13 +42,13 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.3.2",
-                    "commit": "ed4d0677fae30829babae63ab458cf06ceeb89ee",
+                    "tag": "v6.4.2",
+                    "commit": "207b66fa6e010d07352b92b4bc148bca8026e7fa",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
-                        "tag-query": "first(.[].name | match( \"v6.3[\\\\d.]+-lts|v6.3[\\\\d.]+\" ) | .string)",
+                        "tag-query": "first(.[].name | match( \"v6.4[\\\\d.]+-lts|v6.4[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
                     },
@@ -57,12 +57,12 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "commit": "cee5373e6119a7ee20ba5e941185f4a22104d46d",
+                    "commit": "0a34013e271bd8831255bb01c9c8284459d17cca",
                     "dest": "src/3rdparty",
                     "x-checker-data": {
                         "is-important": true,
                         "type": "json",
-                        "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine-chromium/repository/commits?ref_name=94-based",
+                        "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine-chromium/repository/commits?ref_name=102-based",
                         "commit-query": "first( .[].id )",
                         "version-query": "first( .[].short_id )",
                         "timestamp-query": "first( .[].committed_date )"
