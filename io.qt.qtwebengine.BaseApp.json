@@ -51,21 +51,6 @@
                         "tag-query": "first(.[].name | match( \"v6.4[\\\\d.]+-lts|v6.4[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
-                    },
-                    "disable-submodules": true
-                },
-                {
-                    "type": "git",
-                    "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "commit": "0a34013e271bd8831255bb01c9c8284459d17cca",
-                    "dest": "src/3rdparty",
-                    "x-checker-data": {
-                        "is-important": true,
-                        "type": "json",
-                        "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine-chromium/repository/commits?ref_name=102-based",
-                        "commit-query": "first( .[].id )",
-                        "version-query": "first( .[].short_id )",
-                        "timestamp-query": "first( .[].committed_date )"
                     }
                 },
                 {
