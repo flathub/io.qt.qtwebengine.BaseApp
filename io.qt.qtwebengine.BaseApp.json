@@ -40,13 +40,13 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v5.15.10-lts",
-                    "commit": "c7e716ef1ffd63a8ab1f4dbf879230849eb3b505",
+                    "tag": "v5.15.12-lts",
+                    "commit": "4ea03a0affbfd6ff36a7defd391b7ca139d18c8e",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
-                        "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts|v5.15[\\\\d.]+\" ) | .string)",
+                        "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
                     },
