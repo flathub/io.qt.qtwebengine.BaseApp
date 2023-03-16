@@ -34,10 +34,6 @@
         },
         {
             "type": "patch",
-            "path": "add-inline-with-snappy_attribute_always_inline.patch"
-        },
-        {
-            "type": "patch",
             "path": "add-option-to-enable-rtti-set-default-to-current-behavior.patch"
         }
     ]
