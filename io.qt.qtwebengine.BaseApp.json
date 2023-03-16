@@ -55,7 +55,7 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "commit": "e0fd3a5d3ce79d43dee6e0bad16a71123d9a14b3",
+                    "commit": "e48df7803c7c98b0b2471c94057d32e44a301ad5",
                     "dest": "src/3rdparty",
                     "----": "cannot use x-checker-data, should be using the one https://invent.kde.org/qt/qt/qtwebengine.git points at as a submodule"
                 },
