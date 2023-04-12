@@ -43,12 +43,8 @@
                     "tag": "v5.15.13-lts",
                     "commit": "a3ca44e5b92c5a0dc7d90337c651c9bdb838ac93",
                     "x-checker-data": {
-                        "is-main-source": true,
-                        "type": "json",
-                        "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
-                        "tag-query": "first(.[].name | match( \"v5.15[\\\\d.]+-lts\" ) | .string)",
-                        "version-query": "$tag | sub(\"^v\"; \"\")",
-                        "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
+                        "type": "git",
+                        "tag-pattern": "^(v5.15.*-lts)$"
                     },
                     "disable-submodules": true
                 },
