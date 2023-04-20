@@ -2,5 +2,6 @@
     "automerge-flathubbot-prs": false,
     "disable-external-data-checker": true,
     "require-important-update": true,
+    "end-of-life": "The 5.15-21.08 is deprecated. Please update to 5.15-22.08 or 6.*",
     "skip-appstream-check": true
 }
