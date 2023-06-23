@@ -30,13 +30,13 @@
         {
             "type": "git",
             "url": "https://invent.kde.org/qt/qt/qtwebview.git",
-            "tag": "v6.4.2",
-            "commit": "2d6af23bbdefe5b69c34ea69026cff4f47dd952b",
+            "tag": "v6.5.1",
+            "commit": "9352b7fa3cf7b8be8486ca3f2fd0549997a3d35b",
             "x-checker-data": {
                 "is-important": true,
                 "type": "json",
                 "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebview/repository/tags",
-                "tag-query": "first(.[].name | match( \"v6.4[\\\\d.]+(-lts-lgpl|-lts)?\" ) | .string)",
+                "tag-query": "first(.[].name | match( \"v6.5[\\\\d.]+(-lts-lgpl|-lts)?\" ) | .string)",
                 "version-query": "$tag | sub(\"^v\"; \"\")",
                 "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
             }
