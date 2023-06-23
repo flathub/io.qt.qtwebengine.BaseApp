@@ -3,7 +3,7 @@ index 151918bd7..1d1bf1f17 100644
 --- a/src/core/web_engine_library_info.cpp
 +++ b/src/core/web_engine_library_info.cpp
 @@ -339,8 +339,7 @@ QString resourcesPath()
- #if defined(OS_MAC) && defined(QT_MAC_FRAMEWORK_BUILD)
+ #if defined(Q_OS_DARWIN) && defined(QT_MAC_FRAMEWORK_BUILD)
              candidatePaths << getResourcesPath(frameworkBundle());
  #endif
 -            candidatePaths << QLibraryInfo::path(QLibraryInfo::DataPath) % QDir::separator()

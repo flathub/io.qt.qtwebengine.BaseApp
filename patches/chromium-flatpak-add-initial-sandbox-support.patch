@@ -56,13 +56,14 @@ index 90f0c282a..7270d63b9 100644
    friend class shell_integration_linux::
        LaunchXdgUtilityScopedAllowBaseSyncPrimitives;
 +  friend class sandbox::FlatpakSandbox;
+   friend class storage::ObfuscatedFileUtil;
    friend class syncer::HttpBridge;
    friend class syncer::GetLocalChangesRequest;
    friend class webrtc::DesktopConfigurationMonitor;
-diff --git a/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.js b/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.js
+diff --git a/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.js b/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.ts
 index 564ce0857..6345f2558 100644
---- a/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.js
-+++ b/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.js
+--- a/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.ts
++++ b/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.ts
 @@ -139,6 +139,7 @@ function androidHandler() {
  function linuxHandler() {
    const suidSandbox = loadTimeData.getBoolean('suid');
@@ -116,7 +117,7 @@ diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc b/ch
 index c878f4517..a5178a2c2 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 +++ b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-@@ -13,11 +13,13 @@
+@@ -13,15 +13,17 @@
  #include "base/logging.h"
  #include "base/posix/unix_domain_socket.h"
  #include "base/process/kill.h"
@@ -124,7 +125,11 @@ index c878f4517..a5178a2c2 100644
  #include "base/process/memory.h"
  #include "base/strings/string_number_conversions.h"
  #include "build/build_config.h"
+ #include "build/chromeos_buildflags.h"
  #include "content/common/zygote/zygote_commands_linux.h"
+ #include "content/common/zygote/zygote_communication_linux.h"
+ #include "content/common/zygote/zygote_handle_impl_linux.h"
+ #include "content/public/common/zygote/zygote_handle.h"
  #include "sandbox/linux/services/credentials.h"
 +#include "sandbox/linux/services/flatpak_sandbox.h"
  #include "sandbox/linux/services/namespace_sandbox.h"
@@ -1250,11 +1255,13 @@ diff --git a/chromium/sandbox/policy/linux/sandbox_linux.h b/chromium/sandbox/po
 index fc5214412..86c35b577 100644
 --- a/chromium/sandbox/policy/linux/sandbox_linux.h
 +++ b/chromium/sandbox/policy/linux/sandbox_linux.h
-@@ -11,6 +11,7 @@
+@@ -11,8 +11,9 @@
  
  #include "base/check_op.h"
+ #include "base/memory/raw_ptr.h"
  #include "base/posix/global_descriptors.h"
 +#include "sandbox/linux/services/flatpak_sandbox.h"
+ #include "base/sanitizer_buildflags.h"
  #include "sandbox/linux/syscall_broker/broker_command.h"
  #include "sandbox/linux/syscall_broker/broker_file_permission.h"
  #include "sandbox/policy/export.h"
