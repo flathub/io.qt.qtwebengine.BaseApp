@@ -8,8 +8,8 @@
     "sources": [
         {
             "type": "archive",
-            "url": "https://github.com/google/re2/archive/2023-02-01/re2-2023-02-01.tar.gz",
-            "sha256": "cbce8b7803e856827201a132862e41af386e7afd9cc6d9a9bc7a4fa4d8ddbdde",
+            "url": "https://github.com/google/re2/archive/2023-08-01/re2-2023-08-01.tar.gz",
+            "sha256": "d82d0efe2389949244445e7a6ac9a10fccc3d6a3d267ec4652991a51291647b0",
             "x-checker-data": {
                 "type": "anitya",
                 "project-id": 10500,
