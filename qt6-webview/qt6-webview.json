@@ -30,8 +30,8 @@
         {
             "type": "git",
             "url": "https://invent.kde.org/qt/qt/qtwebview.git",
-            "tag": "v6.2.4",
-            "commit": "4648d5d9ad50171a9f6e8fe8803cc92c12740baf",
+            "tag": "v6.2.6-lts-lgpl",
+            "commit": "ac2b5a55fb9ab37f796f1842f2351386c131ebf4",
             "x-checker-data": {
                 "type": "git",
                 "tag-pattern": "(v6.2.*)"
