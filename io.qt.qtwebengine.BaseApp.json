@@ -1,13 +1,13 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "5.15-22.08",
+    "branch": "5.15-23.08",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
         "org.freedesktop.Sdk.Extension.node18"
     ],
-    "runtime-version": "5.15-22.08",
+    "runtime-version": "5.15-23.08",
     "separate-locales": false,
     "command": "QtWebEngineProcess",
     "modules": [
@@ -53,7 +53,7 @@
                     "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
                     "commit": "e48df7803c7c98b0b2471c94057d32e44a301ad5",
                     "dest": "src/3rdparty",
-                    "----": "cannot use x-checker-data, should be using the one https://invent.kde.org/qt/qt/qtwebengine.git points at as a submodule"
+                    "//": "cannot use x-checker-data, should be using the one https://invent.kde.org/qt/qt/qtwebengine.git points at as a submodule"
                 },
                 {
                     "type": "shell",
@@ -92,7 +92,11 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/python3.patch"
+                    "paths": [
+                        "patches/python3.patch",
+                        "patches/chromium-python311.patch",
+                        "patches/absl-gcc13.patch"
+                    ]
                 },
                 {
                     "type": "patch",
@@ -100,7 +104,8 @@
                         "patches/chromium-python3.patch",
                         "patches/chromium-pipewire03.patch",
                         "patches/chromium-python310.patch",
-                        "patches/qtwebengine-chromium-gcc12.patch"
+                        "patches/qtwebengine-chromium-gcc13.patch",
+                        "patches/ffmpeg-as-fix.patch"
                     ],
                     "options": [
                         "--directory=src/3rdparty"

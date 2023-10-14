@@ -1,0 +1,259 @@
+diff --git a/chromium/cc/trees/target_property.cc b/chromium/cc/trees/target_property.cc
+index ed206255730..00595fda004 100644
+--- a/chromium/cc/trees/target_property.cc
++++ b/chromium/cc/trees/target_property.cc
+@@ -2,6 +2,8 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
++#include <cstdint>
++
+ #include "cc/trees/target_property.h"
+ 
+ namespace cc {
+diff --git a/chromium/device/base/synchronization/one_writer_seqlock.cc b/chromium/device/base/synchronization/one_writer_seqlock.cc
+index 213b6301c05..98266a16c61 100644
+--- a/chromium/device/base/synchronization/one_writer_seqlock.cc
++++ b/chromium/device/base/synchronization/one_writer_seqlock.cc
+@@ -2,6 +2,8 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
++#include <cstdint>
++
+ #include "device/base/synchronization/one_writer_seqlock.h"
+ 
+ namespace device {
+diff --git a/chromium/device/bluetooth/public/cpp/bluetooth_uuid.h b/chromium/device/bluetooth/public/cpp/bluetooth_uuid.h
+index 0c27ae71059..3b0bbdfde20 100644
+--- a/chromium/device/bluetooth/public/cpp/bluetooth_uuid.h
++++ b/chromium/device/bluetooth/public/cpp/bluetooth_uuid.h
+@@ -7,6 +7,7 @@
+ 
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "build/build_config.h"
+ 
+diff --git a/chromium/gpu/command_buffer/common/webgpu_cmd_enums.h b/chromium/gpu/command_buffer/common/webgpu_cmd_enums.h
+index 83615b30c8a..8fa9fb1f6d5 100644
+--- a/chromium/gpu/command_buffer/common/webgpu_cmd_enums.h
++++ b/chromium/gpu/command_buffer/common/webgpu_cmd_enums.h
+@@ -5,6 +5,8 @@
+ #ifndef GPU_COMMAND_BUFFER_COMMON_WEBGPU_CMD_ENUMS_H_
+ #define GPU_COMMAND_BUFFER_COMMON_WEBGPU_CMD_ENUMS_H_
+ 
++#include <cstdint>
++
+ namespace gpu {
+ namespace webgpu {
+ 
+diff --git a/chromium/gpu/config/device_perf_info.h b/chromium/gpu/config/device_perf_info.h
+index e33874ba3bd..8b104aa98c6 100644
+--- a/chromium/gpu/config/device_perf_info.h
++++ b/chromium/gpu/config/device_perf_info.h
+@@ -7,6 +7,7 @@
+ 
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "base/optional.h"
+ #include "build/build_config.h"
+diff --git a/chromium/gpu/config/gpu_feature_info.h b/chromium/gpu/config/gpu_feature_info.h
+index 027f1a5af3e..2de2a1c2f05 100644
+--- a/chromium/gpu/config/gpu_feature_info.h
++++ b/chromium/gpu/config/gpu_feature_info.h
+@@ -7,6 +7,7 @@
+ 
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "gpu/config/gpu_feature_type.h"
+ #include "gpu/gpu_export.h"
+diff --git a/chromium/gpu/config/gpu_preferences.h b/chromium/gpu/config/gpu_preferences.h
+index 6b8587151d6..0647d6159a2 100644
+--- a/chromium/gpu/config/gpu_preferences.h
++++ b/chromium/gpu/config/gpu_preferences.h
+@@ -8,6 +8,7 @@
+ #include <stddef.h>
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "base/macros.h"
+ #include "build/build_config.h"
+diff --git a/chromium/gpu/config/gpu_util.h b/chromium/gpu/config/gpu_util.h
+index b4d6dfb3087..0dc300a9f59 100644
+--- a/chromium/gpu/config/gpu_util.h
++++ b/chromium/gpu/config/gpu_util.h
+@@ -5,6 +5,8 @@
+ #ifndef GPU_CONFIG_GPU_UTIL_H_
+ #define GPU_CONFIG_GPU_UTIL_H_
+ 
++#include <cstdint>
++
+ #include "build/build_config.h"
+ #include "gpu/config/gpu_feature_info.h"
+ #include "gpu/gpu_export.h"
+diff --git a/chromium/net/cookies/cookie_inclusion_status.h b/chromium/net/cookies/cookie_inclusion_status.h
+index 9e506b55501..bfe10487c18 100644
+--- a/chromium/net/cookies/cookie_inclusion_status.h
++++ b/chromium/net/cookies/cookie_inclusion_status.h
+@@ -7,6 +7,7 @@
+ 
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "net/base/net_export.h"
+ 
+diff --git a/chromium/third_party/angle/include/GLSLANG/ShaderVars.h b/chromium/third_party/angle/include/GLSLANG/ShaderVars.h
+index 9911546b90d..a7cdaf5a7c4 100644
+--- a/chromium/third_party/angle/include/GLSLANG/ShaderVars.h
++++ b/chromium/third_party/angle/include/GLSLANG/ShaderVars.h
+@@ -14,6 +14,7 @@
+ #include <array>
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ // This type is defined here to simplify ANGLE's integration with glslang for SPIRv.
+ using ShCompileOptions = uint64_t;
+diff --git a/chromium/third_party/angle/src/common/angleutils.h b/chromium/third_party/angle/src/common/angleutils.h
+index f669d7df308..fb9a44225c4 100644
+--- a/chromium/third_party/angle/src/common/angleutils.h
++++ b/chromium/third_party/angle/src/common/angleutils.h
+@@ -18,6 +18,7 @@
+ #include <climits>
+ #include <cstdarg>
+ #include <cstddef>
++#include <cstdint>
+ #include <set>
+ #include <sstream>
+ #include <string>
+diff --git a/chromium/third_party/breakpad/breakpad/src/client/linux/handler/minidump_descriptor.h b/chromium/third_party/breakpad/breakpad/src/client/linux/handler/minidump_descriptor.h
+index c7e4f2b3787..f30ce91b365 100644
+--- a/chromium/third_party/breakpad/breakpad/src/client/linux/handler/minidump_descriptor.h
++++ b/chromium/third_party/breakpad/breakpad/src/client/linux/handler/minidump_descriptor.h
+@@ -34,6 +34,7 @@
+ #include <sys/types.h>
+ 
+ #include <string>
++#include <cstdint>
+ 
+ #include "client/linux/handler/microdump_extra_info.h"
+ #include "common/using_std_string.h"
+diff --git a/chromium/third_party/perfetto/include/perfetto/ext/base/uuid.h b/chromium/third_party/perfetto/include/perfetto/ext/base/uuid.h
+index 1b4c53815bc..83d65c4b69f 100644
+--- a/chromium/third_party/perfetto/include/perfetto/ext/base/uuid.h
++++ b/chromium/third_party/perfetto/include/perfetto/ext/base/uuid.h
+@@ -19,6 +19,7 @@
+ 
+ #include <array>
+ #include <string>
++#include <cstdint>
+ 
+ #include "perfetto/ext/base/optional.h"
+ 
+diff --git a/chromium/third_party/skia/src/utils/SkParseColor.cpp b/chromium/third_party/skia/src/utils/SkParseColor.cpp
+index 0dc3497062f..9278a5328bf 100644
+--- a/chromium/third_party/skia/src/utils/SkParseColor.cpp
++++ b/chromium/third_party/skia/src/utils/SkParseColor.cpp
+@@ -11,6 +11,8 @@
+ #include <algorithm> // std::lower_bound
+ #include <iterator>
+ 
++#include <iterator>
++
+ static constexpr const char* gColorNames[] = {
+     "aliceblue",
+     "antiquewhite",
+diff --git a/chromium/third_party/webrtc/call/rtp_demuxer.h b/chromium/third_party/webrtc/call/rtp_demuxer.h
+index 3aa7e9df268..ce205b332eb 100644
+--- a/chromium/third_party/webrtc/call/rtp_demuxer.h
++++ b/chromium/third_party/webrtc/call/rtp_demuxer.h
+@@ -16,6 +16,7 @@
+ #include <string>
+ #include <utility>
+ #include <vector>
++#include <cstdint>
+ 
+ namespace webrtc {
+ 
+diff --git a/chromium/third_party/webrtc/rtc_base/third_party/base64/base64.h b/chromium/third_party/webrtc/rtc_base/third_party/base64/base64.h
+index 7a936f23e78..9e85bf6966d 100644
+--- a/chromium/third_party/webrtc/rtc_base/third_party/base64/base64.h
++++ b/chromium/third_party/webrtc/rtc_base/third_party/base64/base64.h
+@@ -14,6 +14,7 @@
+ 
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "rtc_base/system/rtc_export.h"
+ 
+diff --git a/chromium/tools/grit/grit/util.py b/chromium/tools/grit/grit/util.py
+index 528d766ad6b..6e8cdb0ebfa 100644
+--- a/chromium/tools/grit/grit/util.py
++++ b/chromium/tools/grit/grit/util.py
+@@ -211,7 +211,7 @@ def ReadFile(filename, encoding):
+     mode = 'rb'
+     encoding = None
+   else:
+-    mode = 'rU'
++    mode = 'r'
+ 
+   with io.open(abs(filename), mode, encoding=encoding) as f:
+     return f.read()
+diff --git a/chromium/ui/base/prediction/kalman_filter.h b/chromium/ui/base/prediction/kalman_filter.h
+index 0571cdb4ef6..7223cd9263b 100644
+--- a/chromium/ui/base/prediction/kalman_filter.h
++++ b/chromium/ui/base/prediction/kalman_filter.h
+@@ -5,6 +5,8 @@
+ #ifndef UI_BASE_PREDICTION_KALMAN_FILTER_H_
+ #define UI_BASE_PREDICTION_KALMAN_FILTER_H_
+ 
++#include <cstdint>
++
+ #include "base/component_export.h"
+ #include "base/macros.h"
+ #include "ui/gfx/geometry/matrix3_f.h"
+diff --git a/chromium/v8/src/base/logging.h b/chromium/v8/src/base/logging.h
+index fe39f988225..ff17bb3f6eb 100644
+--- a/chromium/v8/src/base/logging.h
++++ b/chromium/v8/src/base/logging.h
+@@ -8,6 +8,7 @@
+ #include <cstring>
+ #include <sstream>
+ #include <string>
++#include <cstdint>
+ 
+ #include "src/base/base-export.h"
+ #include "src/base/build_config.h"
+diff --git a/chromium/v8/src/base/macros.h b/chromium/v8/src/base/macros.h
+index 37cab78f08f..9392169d4a4 100644
+--- a/chromium/v8/src/base/macros.h
++++ b/chromium/v8/src/base/macros.h
+@@ -7,6 +7,7 @@
+ 
+ #include <limits>
+ #include <type_traits>
++#include <cstdint>
+ 
+ #include "src/base/compiler-specific.h"
+ #include "src/base/logging.h"
+diff --git a/chromium/v8/src/inspector/v8-string-conversions.h b/chromium/v8/src/inspector/v8-string-conversions.h
+index c1d69c18f0a..66b3564ccad 100644
+--- a/chromium/v8/src/inspector/v8-string-conversions.h
++++ b/chromium/v8/src/inspector/v8-string-conversions.h
+@@ -6,6 +6,7 @@
+ #define V8_INSPECTOR_V8_STRING_CONVERSIONS_H_
+ 
+ #include <string>
++#include <cstdint>
+ 
+ // Conversion routines between UT8 and UTF16, used by string-16.{h,cc}. You may
+ // want to use string-16.h directly rather than these.

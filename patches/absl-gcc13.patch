@@ -1,0 +1,10 @@
+--- qt5-qtwebengine/src/3rdparty/chromium/third_party/abseil-cpp/absl/strings/internal/str_format/extension.h-orig	2023-10-14 11:36:55.072223868 -0400
++++ qt5-qtwebengine/src/3rdparty/chromium/third_party/abseil-cpp/absl/strings/internal/str_format/extension.h	2023-10-14 11:37:15.950609544 -0400
+@@ -20,6 +20,7 @@
+ 
+ #include <cstddef>
+ #include <cstring>
++#include <cstdint>
+ #include <ostream>
+ 
+ #include "absl/base/config.h"
