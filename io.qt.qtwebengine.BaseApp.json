@@ -85,21 +85,14 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/chromium-add-app-libdir.patch",
-                    "options": [
-                        "--directory=src/3rdparty"
-                    ]
-                },
-                {
-                    "type": "patch",
                     "path": "patches/python3.patch"
                 },
                 {
                     "type": "patch",
                     "paths": [
+                        "patches/chromium-add-app-libdir.patch",
                         "patches/chromium-python3.patch",
                         "patches/chromium-pipewire03.patch",
-                        "patches/chromium-python310.patch",
                         "patches/qtwebengine-chromium-gcc12.patch"
                     ],
                     "options": [
