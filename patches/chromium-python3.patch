@@ -1769,3 +1769,49 @@ index d47c398259b..2702b68b9bd 100755
  
    if options.output_cc:
      out_cc.close()
+diff --git a/chromium/tools/grit/grit/util.py b/chromium/tools/grit/grit/util.py
+index 528d766ad6b..6e8cdb0ebfa 100644
+--- a/chromium/tools/grit/grit/util.py
++++ b/chromium/tools/grit/grit/util.py
+@@ -211,7 +211,7 @@ def ReadFile(filename, encoding):
+     mode = 'rb'
+     encoding = None
+   else:
+-    mode = 'rU'
++    mode = 'r'
+
+   with io.open(abs(filename), mode, encoding=encoding) as f:
+     return f.read()
+diff --git a/chromium/third_party/jinja2/tests.py b/chromium/third_party/jinja2/tests.py
+index 0adc3d4dbcb..b14f85ff148 100644
+--- a/chromium/third_party/jinja2/tests.py
++++ b/chromium/third_party/jinja2/tests.py
+@@ -10,7 +10,7 @@
+ """
+ import operator
+ import re
+-from collections import Mapping
++from collections.abc import Mapping
+ from jinja2.runtime import Undefined
+ from jinja2._compat import text_type, string_types, integer_types
+ import decimal
+--- a/chromium/tools/metrics/ukm/ukm_model.py   2023-10-16 09:10:42.843063440 +0530
++++ b/chromium/tools/metrics/ukm/ukm_model.py   2023-10-16 09:10:42.843063440 +0530
+@@ -42,7 +42,7 @@
+ _STATISTICS_TYPE =  models.ObjectNodeType(
+     'statistics',
+     attributes=[
+-      ('export', str, r'^(?i)(|true|false)$'),
++      ('export', str, r'(?i)^(|true|false)$'),
+     ],
+     children=[
+         models.ChildType(_QUANTILES_TYPE.tag, _QUANTILES_TYPE, multiple=False),
+@@ -94,7 +94,7 @@
+     'event',
+     attributes=[
+       ('name', str, r'^[A-Za-z0-9.]+$'),
+-      ('singular', str, r'^(?i)(|true|false)$'),
++      ('singular', str, r'(?i)^(|true|false)$'),
+     ],
+     alphabetization=[
+         (_OBSOLETE_TYPE.tag, _KEEP_ORDER),
