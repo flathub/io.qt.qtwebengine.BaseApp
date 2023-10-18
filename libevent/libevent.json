@@ -1,6 +1,6 @@
 {
     "name": "libevent",
-    "buildsystem": "cmake",
+    "buildsystem": "cmake-ninja",
     "config-opts": [
         "-DEVENT__LIBRARY_TYPE=SHARED"
     ],
