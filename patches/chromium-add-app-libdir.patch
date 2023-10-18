@@ -1,8 +1,8 @@
 diff --git a/chromium/build/config/linux/pkg-config.py b/chromium/build/config/linux/pkg-config.py
-index 5adf70cc3bb..35f61d9f326 100755
+index 2e38c7ffbd1..584b997653e 100755
 --- a/chromium/build/config/linux/pkg-config.py
 +++ b/chromium/build/config/linux/pkg-config.py
-@@ -213,7 +213,7 @@ def main():
+@@ -212,7 +212,7 @@ def main():
    includes = []
    cflags = []
    libs = []

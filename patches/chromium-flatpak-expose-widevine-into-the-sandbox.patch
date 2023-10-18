@@ -10,10 +10,10 @@ Subject: [PATCH] flatpak: Expose Widevine into the sandbox
  3 files changed, 131 insertions(+), 24 deletions(-)
 
 diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-index a5178a2c2..c45e8aed7 100644
+index df30e4bf605..8319f842798 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 +++ b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-@@ -10,18 +10,24 @@
+@@ -10,7 +10,10 @@
  
  #include "base/allocator/allocator_extension.h"
  #include "base/files/file_enumerator.h"
@@ -24,7 +24,7 @@ index a5178a2c2..c45e8aed7 100644
  #include "base/posix/unix_domain_socket.h"
  #include "base/process/kill.h"
  #include "base/process/launch.h"
- #include "base/process/memory.h"
+@@ -18,10 +21,13 @@
  #include "base/strings/string_number_conversions.h"
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
@@ -38,26 +38,18 @@ index a5178a2c2..c45e8aed7 100644
  #include "sandbox/linux/services/credentials.h"
  #include "sandbox/linux/services/flatpak_sandbox.h"
  #include "sandbox/linux/services/namespace_sandbox.h"
-@@ -25,12 +31,13 @@
+@@ -29,6 +35,7 @@
  #include "sandbox/linux/suid/common/sandbox.h"
  #include "sandbox/policy/linux/sandbox_linux.h"
  #include "sandbox/policy/switches.h"
 +#include "third_party/widevine/cdm/buildflags.h"  // nogncheck
  
- #if BUILDFLAG(IS_CHROMEOS_ASH)
+ #if BUILDFLAG(IS_CHROMEOS)
  #include "content/common/zygote/zygote_communication_linux.h"
- #include "content/common/zygote/zygote_handle_impl_linux.h"
- #include "content/public/common/zygote/zygote_handle.h"
- #endif
-
- namespace content {
- 
-@@ -177,8 +184,51 @@ pid_t ZygoteHostImpl::LaunchZygote(
-   if (is_sandboxed_zygote && use_namespace_sandbox_) {
-     process = sandbox::NamespaceSandbox::LaunchProcess(*cmd_line, options);
+@@ -189,6 +196,51 @@ pid_t ZygoteHostImpl::LaunchZygote(
    } else if (is_sandboxed_zygote && use_flatpak_sandbox_) {
--    process = sandbox::FlatpakSandbox::GetInstance()->LaunchProcess(*cmd_line,
--                                                                    options);
+     process = sandbox::FlatpakSandbox::GetInstance()->LaunchProcess(*cmd_line,
+                                                                     options);
 +    sandbox::FlatpakSandbox::SpawnOptions spawn_options;
 +
 +#if BUILDFLAG(ENABLE_LIBRARY_CDMS)
