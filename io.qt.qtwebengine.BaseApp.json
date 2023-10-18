@@ -42,13 +42,13 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.5.3",
-                    "commit": "864b08394d1e6d366d7c136ffc50e27adfd08447",
+                    "tag": "v6.6.0",
+                    "commit": "f30957b9ee040f506408267e129ea166d44983dc",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
-                        "tag-query": "first(.[].name | match( \"v6.5[\\\\d.]+-lts|v6.5[\\\\d.]+\" ) | .string)",
+                        "tag-query": "first(.[].name | match( \"v6.6[\\\\d.]+-lts|v6.6[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
                     }
