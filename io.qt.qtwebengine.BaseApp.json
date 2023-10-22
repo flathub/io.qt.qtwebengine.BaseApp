@@ -77,35 +77,13 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/chromium-add-app-libdir.patch",
-                    "options": [
-                        "--directory=src/3rdparty"
-                    ]
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/chromium-flatpak-add-initial-sandbox-support.patch",
-                    "options": [
-                        "--directory=src/3rdparty"
-                    ]
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/chromium-flatpak-adjust-paths-for-the-sandbox.patch",
-                    "options": [
-                        "--directory=src/3rdparty"
-                    ]
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/chromium-flatpak-expose-widevine-into-the-sandbox.patch",
-                    "options": [
-                        "--directory=src/3rdparty"
-                    ]
-                },
-                {
-                    "type": "patch",
-                    "path":  "patches/chromium-ffmpeg-binutils.patch",
+                    "paths": [
+                        "patches/chromium-add-app-libdir.patch",
+                        "patches/chromium-flatpak-add-initial-sandbox-support.patch",
+                        "patches/chromium-flatpak-adjust-paths-for-the-sandbox.patch",
+                        "patches/chromium-flatpak-expose-widevine-into-the-sandbox.patch",
+                        "patches/chromium-ffmpeg-binutils.patch"
+                    ],
                     "options": [
                         "--directory=src/3rdparty"
                     ]
