@@ -102,6 +102,13 @@
                     "options": [
                         "--directory=src/3rdparty"
                     ]
+                },
+                {
+                    "type": "patch",
+                    "path":  "patches/chromium-ffmpeg-binutils.patch",
+                    "options": [
+                        "--directory=src/3rdparty"
+                    ]
                 }
             ],
             "modules": [
