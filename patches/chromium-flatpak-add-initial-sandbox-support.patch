@@ -308,7 +308,15 @@ index 1dc0412cba7..475683710e6 100644
                                   base::OnceClosure post_fork_parent_callback) {
    DCHECK(linux_sandbox);
  
-@@ -173,7 +174,8 @@ static void EnterLayerOneSandbox(sandbox::policy::SandboxLinux* linux_sandbox,
+@@ -160,7 +161,6 @@ static void EnterLayerOneSandbox(sandbox::policy::SandboxLinux* linux_sandbox,
+ // It's not just our code which may do so - some system-installed libraries
+ // are known to be culprits, e.g. lttng.
+ #if !defined(THREAD_SANITIZER)
+-  if (using_layer1_sandbox || using_layer2_sandbox)
+   CHECK(sandbox::ThreadHelpers::IsSingleThreaded());
+ #endif
+ 
+@@ -173,7 +173,8 @@ static void EnterLayerOneSandbox(sandbox::policy::SandboxLinux* linux_sandbox,
    } else if (sandbox::NamespaceSandbox::InNewUserNamespace()) {
      EnterNamespaceSandbox(linux_sandbox, std::move(post_fork_parent_callback));
    } else {
@@ -318,7 +326,7 @@ index 1dc0412cba7..475683710e6 100644
    }
  }
  
-@@ -198,8 +200,11 @@ bool ZygoteMain(
+@@ -198,8 +199,11 @@ bool ZygoteMain(
        linux_sandbox->setuid_sandbox_client()->IsSuidSandboxChild();
    const bool using_namespace_sandbox =
        sandbox::NamespaceSandbox::InNewUserNamespace();
@@ -331,7 +339,7 @@ index 1dc0412cba7..475683710e6 100644
  
    if (using_setuid_sandbox) {
      linux_sandbox->setuid_sandbox_client()->CloseDummyFile();
-@@ -226,7 +231,7 @@ bool ZygoteMain(
+@@ -226,7 +230,7 @@ bool ZygoteMain(
  
    // Turn on the first layer of the sandbox if the configuration warrants it.
    EnterLayerOneSandbox(
@@ -340,7 +348,7 @@ index 1dc0412cba7..475683710e6 100644
        base::BindOnce(CloseFds, linux_sandbox->GetFileDescriptorsToClose()));
  
    const int sandbox_flags = linux_sandbox->GetStatus();
-@@ -238,6 +243,10 @@ bool ZygoteMain(
+@@ -238,6 +242,10 @@ bool ZygoteMain(
        !!(sandbox_flags & sandbox::policy::SandboxLinux::kUserNS);
    CHECK_EQ(using_namespace_sandbox, namespace_sandbox_engaged);
  
