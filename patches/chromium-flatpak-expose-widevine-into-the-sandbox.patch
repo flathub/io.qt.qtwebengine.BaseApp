@@ -1,7 +1,7 @@
-From cc38af35efd96c036a1a89deacccea171784b27e Mon Sep 17 00:00:00 2001
+From fd6e4d8af5d08da63e4e9d2d1ac4ef290cceab80 Mon Sep 17 00:00:00 2001
 From: Ryan Gonzalez <rymg19@gmail.com>
 Date: Tue, 17 Nov 2020 13:00:39 -0600
-Subject: [PATCH] flatpak: Expose Widevine into the sandbox
+Subject: [PATCH 2/2] flatpak: Expose Widevine into the sandbox
 
 ---
  .../zygote_host/zygote_host_impl_linux.cc     | 54 +++++++++++++-
@@ -10,7 +10,7 @@ Subject: [PATCH] flatpak: Expose Widevine into the sandbox
  3 files changed, 131 insertions(+), 24 deletions(-)
 
 diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-index df30e4bf605..8319f842798 100644
+index df30e4bf605..89aa041b106 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 +++ b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 @@ -10,7 +10,10 @@
@@ -46,10 +46,12 @@ index df30e4bf605..8319f842798 100644
  
  #if BUILDFLAG(IS_CHROMEOS)
  #include "content/common/zygote/zygote_communication_linux.h"
-@@ -189,6 +196,51 @@ pid_t ZygoteHostImpl::LaunchZygote(
+@@ -187,8 +194,51 @@ pid_t ZygoteHostImpl::LaunchZygote(
+   if (is_sandboxed_zygote && use_namespace_sandbox_) {
+     process = sandbox::NamespaceSandbox::LaunchProcess(*cmd_line, options);
    } else if (is_sandboxed_zygote && use_flatpak_sandbox_) {
-     process = sandbox::FlatpakSandbox::GetInstance()->LaunchProcess(*cmd_line,
-                                                                     options);
+-    process = sandbox::FlatpakSandbox::GetInstance()->LaunchProcess(*cmd_line,
+-                                                                    options);
 +    sandbox::FlatpakSandbox::SpawnOptions spawn_options;
 +
 +#if BUILDFLAG(ENABLE_LIBRARY_CDMS)
@@ -99,7 +101,7 @@ index df30e4bf605..8319f842798 100644
      process = base::LaunchProcess(*cmd_line, options);
    }
 diff --git a/chromium/sandbox/linux/services/flatpak_sandbox.cc b/chromium/sandbox/linux/services/flatpak_sandbox.cc
-index 7b6d9c242..4b93799e0 100644
+index cdc225a18b8..f848b3360b8 100644
 --- a/chromium/sandbox/linux/services/flatpak_sandbox.cc
 +++ b/chromium/sandbox/linux/services/flatpak_sandbox.cc
 @@ -4,6 +4,7 @@
@@ -110,7 +112,7 @@ index 7b6d9c242..4b93799e0 100644
  #include <signal.h>
  #include <sstream>
  #include <string>
-@@ -93,6 +94,18 @@ enum FlatpakSpawnSandboxFlags {
+@@ -92,6 +93,18 @@ enum FlatpakSpawnSandboxFlags {
    kFlatpakSpawnSandbox_ShareA11yBus = 1 << 4,
  };
  
@@ -129,7 +131,7 @@ index 7b6d9c242..4b93799e0 100644
  FlatpakSandbox::FlatpakSandbox()
      : bus_thread_("FlatpakPortalBus"), process_info_cv_(&process_info_lock_) {}
  
-@@ -169,8 +182,9 @@ bool FlatpakSandbox::IsPidSandboxed(base::ProcessId relative_pid) {
+@@ -168,8 +181,9 @@ bool FlatpakSandbox::IsPidSandboxed(base::ProcessId relative_pid) {
  
  base::Process FlatpakSandbox::LaunchProcess(
      const base::CommandLine& cmdline,
@@ -141,7 +143,7 @@ index 7b6d9c242..4b93799e0 100644
    if (external_pid == base::kNullProcessId) {
      return base::Process();
    }
-@@ -364,9 +378,9 @@ void FlatpakSandbox::OnSpawnExitedSignal(dbus::Signal* signal) {
+@@ -363,9 +377,9 @@ void FlatpakSandbox::OnSpawnExitedSignal(dbus::Signal* signal) {
    process_info_cv_.Broadcast();
  }
  
@@ -154,7 +156,7 @@ index 7b6d9c242..4b93799e0 100644
    base::ScopedBlockingCall scoped_blocking_call(FROM_HERE,
                                                  base::BlockingType::MAY_BLOCK);
    base::ScopedAllowBaseSyncPrimitives allow_wait;
-@@ -392,24 +406,26 @@ base::ProcessId FlatpakSandbox::Spawn(
+@@ -391,24 +405,26 @@ base::ProcessId FlatpakSandbox::Spawn(
        FROM_HERE,
        base::BindOnce(&FlatpakSandbox::SpawnOnBusThread, base::Unretained(this),
                       base::Unretained(&external_pid), base::Unretained(&event),
@@ -189,7 +191,7 @@ index 7b6d9c242..4b93799e0 100644
            // Change to /app since it's guaranteed to always be present in
            // the sandbox.
            : kFlatpakAppPath;
-@@ -418,7 +434,7 @@ void FlatpakSandbox::SpawnOnBusThread(
+@@ -417,7 +433,7 @@ void FlatpakSandbox::SpawnOnBusThread(
    dbus::MessageWriter argv_writer(nullptr);
    writer.OpenArray("ay", &argv_writer);
  
@@ -198,7 +200,7 @@ index 7b6d9c242..4b93799e0 100644
      WriteStringAsByteArray(&argv_writer, arg);
    }
  
-@@ -440,7 +456,7 @@ void FlatpakSandbox::SpawnOnBusThread(
+@@ -439,7 +455,7 @@ void FlatpakSandbox::SpawnOnBusThread(
    WriteFdPairMap(&fds_writer, STDOUT_FILENO, STDOUT_FILENO);
    WriteFdPairMap(&fds_writer, STDERR_FILENO, STDERR_FILENO);
  
@@ -207,7 +209,7 @@ index 7b6d9c242..4b93799e0 100644
      WriteFdPairMap(&fds_writer, pair.first, pair.second);
    }
  
-@@ -449,7 +465,7 @@ void FlatpakSandbox::SpawnOnBusThread(
+@@ -448,7 +464,7 @@ void FlatpakSandbox::SpawnOnBusThread(
    dbus::MessageWriter env_writer(nullptr);
    writer.OpenArray("{ss}", &env_writer);
  
@@ -216,7 +218,7 @@ index 7b6d9c242..4b93799e0 100644
      dbus::MessageWriter entry_writer(nullptr);
      env_writer.OpenDictEntry(&entry_writer);
  
-@@ -473,11 +489,11 @@ void FlatpakSandbox::SpawnOnBusThread(
+@@ -472,11 +488,11 @@ void FlatpakSandbox::SpawnOnBusThread(
  #else
  #endif
  
@@ -230,7 +232,7 @@ index 7b6d9c242..4b93799e0 100644
      spawn_flags |= kFlatpakSpawn_WatchBus;
    }
  
-@@ -486,6 +502,28 @@ void FlatpakSandbox::SpawnOnBusThread(
+@@ -485,6 +501,28 @@ void FlatpakSandbox::SpawnOnBusThread(
    dbus::MessageWriter options_writer(nullptr);
    writer.OpenArray("{sv}", &options_writer);
  
@@ -260,7 +262,7 @@ index 7b6d9c242..4b93799e0 100644
      dbus::MessageWriter entry_writer(nullptr);
      options_writer.OpenDictEntry(&entry_writer);
 diff --git a/chromium/sandbox/linux/services/flatpak_sandbox.h b/chromium/sandbox/linux/services/flatpak_sandbox.h
-index 167bbc859..de8e7165b 100644
+index 167bbc85945..de8e7165b45 100644
 --- a/chromium/sandbox/linux/services/flatpak_sandbox.h
 +++ b/chromium/sandbox/linux/services/flatpak_sandbox.h
 @@ -9,6 +9,8 @@
@@ -321,5 +323,5 @@ index 167bbc859..de8e7165b 100644
                         base::WaitableEvent* event,
                         dbus::Response* response,
 -- 
-2.39.1
+2.41.0
 
