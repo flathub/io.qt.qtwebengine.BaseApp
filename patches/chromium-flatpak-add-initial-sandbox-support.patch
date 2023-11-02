@@ -1,4 +1,4 @@
-From 19f57ec882063b1c029f4b0018772da7bc401794 Mon Sep 17 00:00:00 2001
+From 6647b501328123791225390cdd36416468b76791 Mon Sep 17 00:00:00 2001
 From: Ryan Gonzalez <rymg19@gmail.com>
 Date: Tue, 17 Mar 2020 13:18:27 -0500
 Subject: [PATCH] flatpak: Add initial sandbox support
@@ -7,22 +7,22 @@ Subject: [PATCH] flatpak: Add initial sandbox support
  chromium/base/threading/thread_restrictions.h |   6 +
  .../sandbox_internals/sandbox_internals.ts    |   4 +
  .../ui/webui/sandbox/sandbox_internals_ui.cc  |   6 +-
- .../browser/child_process_host_impl.cc        |   8 +-
+ .../browser/child_process_host_impl.cc        |  10 +-
  .../zygote_host/zygote_host_impl_linux.cc     |  39 +-
  .../zygote_host/zygote_host_impl_linux.h      |   1 +
  chromium/content/zygote/zygote_linux.cc       |   6 +-
  chromium/content/zygote/zygote_linux.h        |   2 +
  chromium/content/zygote/zygote_main_linux.cc  |  16 +-
- chromium/sandbox/linux/BUILD.gn               |  10 +-
+ chromium/sandbox/linux/BUILD.gn               |   9 +-
  .../sandbox/linux/services/flatpak_pid_map.cc |  57 ++
  .../sandbox/linux/services/flatpak_pid_map.h  |  46 ++
  .../sandbox/linux/services/flatpak_sandbox.cc | 576 ++++++++++++++++++
  .../sandbox/linux/services/flatpak_sandbox.h  | 118 ++++
  chromium/sandbox/policy/BUILD.gn              |   3 +
  .../sandbox/policy/linux/sandbox_linux.cc     |   8 +
- chromium/sandbox/policy/linux/sandbox_linux.h |   8 +
+ chromium/sandbox/policy/linux/sandbox_linux.h |   7 +
  .../service_process_launcher.cc               |  12 +-
- 18 files changed, 907 insertions(+), 19 deletions(-)
+ 18 files changed, 906 insertions(+), 20 deletions(-)
  create mode 100644 chromium/sandbox/linux/services/flatpak_pid_map.cc
  create mode 100644 chromium/sandbox/linux/services/flatpak_pid_map.h
  create mode 100644 chromium/sandbox/linux/services/flatpak_sandbox.cc
@@ -113,7 +113,7 @@ index a51bc508856..ca1e0a6a5ef 100644
                       status & sandbox::policy::SandboxLinux::kNetNS;
    // A second-layer sandbox is also required to be adequately sandboxed.
 diff --git a/chromium/content/browser/child_process_host_impl.cc b/chromium/content/browser/child_process_host_impl.cc
-index c18d4ad83be..dc77b697d65 100644
+index c18d4ad83be..032315c3589 100644
 --- a/chromium/content/browser/child_process_host_impl.cc
 +++ b/chromium/content/browser/child_process_host_impl.cc
 @@ -40,6 +40,7 @@
@@ -124,20 +124,22 @@ index c18d4ad83be..dc77b697d65 100644
  #elif BUILDFLAG(IS_MAC)
  #include "base/mac/foundation_util.h"
  #include "content/browser/mac_helpers.h"
-@@ -73,7 +74,12 @@ base::FilePath ChildProcessHost::GetChildPath(int flags) {
+@@ -73,9 +74,12 @@ base::FilePath ChildProcessHost::GetChildPath(int flags) {
  #if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
    // Use /proc/self/exe rather than our known binary path so updates
    // can't swap out the binary from underneath us.
 -  if (child_path.empty() && flags & CHILD_ALLOW_SELF) {
+-    child_path = base::FilePath(base::kProcSelfExe);
+-  }
 +  // This is not needed for Flatpaks, where updates are going to be in
 +  // a new hardlink tree.
 +  if ((child_path.empty() &&
 +       sandbox::FlatpakSandbox::GetInstance()->GetSandboxLevel() ==
 +           sandbox::FlatpakSandbox::SandboxLevel::kNone) &&
-+      flags & CHILD_ALLOW_SELF) {
-     child_path = base::FilePath(base::kProcSelfExe);
-   }
++      flags & CHILD_ALLOW_SELF)
  #endif
+ 
+   // On most platforms, the child executable is the same as the current
 diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 index 92644fb795d..df30e4bf605 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
@@ -287,7 +289,7 @@ index 165b758efc8..961afa73f66 100644
    // ---------------------------------------------------------------------------
    // Requests from the browser...
 diff --git a/chromium/content/zygote/zygote_main_linux.cc b/chromium/content/zygote/zygote_main_linux.cc
-index 1dc0412cba7..d7e9f410c2c 100644
+index 1dc0412cba7..b03ab4d85d0 100644
 --- a/chromium/content/zygote/zygote_main_linux.cc
 +++ b/chromium/content/zygote/zygote_main_linux.cc
 @@ -35,6 +35,7 @@
@@ -321,8 +323,8 @@ index 1dc0412cba7..d7e9f410c2c 100644
    const bool using_namespace_sandbox =
        sandbox::NamespaceSandbox::InNewUserNamespace();
 +  const bool using_flatpak_sandbox =
-+      sandbox::FlatpakSandbox::GetInstance()->GetSandboxLevel() ==
-+      sandbox::FlatpakSandbox::SandboxLevel::kRestricted;
++    sandbox::FlatpakSandbox::GetInstance()->GetSandboxLevel() ==
++    sandbox::FlatpakSandbox::SandboxLevel::kRestricted;
    const bool using_layer1_sandbox =
 -      using_setuid_sandbox || using_namespace_sandbox;
 +      using_setuid_sandbox || using_namespace_sandbox || using_flatpak_sandbox;
@@ -350,7 +352,7 @@ index 1dc0412cba7..d7e9f410c2c 100644
                  base::GlobalDescriptors::Descriptor(
                      static_cast<uint32_t>(kSandboxIPCChannel), GetSandboxFD()));
 diff --git a/chromium/sandbox/linux/BUILD.gn b/chromium/sandbox/linux/BUILD.gn
-index 9548093b5e9..9215068fbe4 100644
+index 9548093b5e9..6066612feea 100644
 --- a/chromium/sandbox/linux/BUILD.gn
 +++ b/chromium/sandbox/linux/BUILD.gn
 @@ -310,6 +310,10 @@ if (is_linux || is_chromeos) {
@@ -364,19 +366,18 @@ index 9548093b5e9..9215068fbe4 100644
      "services/init_process_reaper.cc",
      "services/init_process_reaper.h",
      "services/proc_util.cc",
-@@ -328,8 +332,10 @@ component("sandbox_services") {
+@@ -328,7 +332,10 @@ component("sandbox_services") {
  
    defines = [ "SANDBOX_IMPLEMENTATION" ]
  
 -  public_deps = [ "//sandbox:sandbox_export" ]
--  deps = [ "//base" ]
 +  public_deps = [
-+    "//dbus",
 +    "//sandbox:sandbox_export",
++    "//dbus",
 +  ]
+   deps = [ "//base" ]
  
    if (compile_credentials) {
-     sources += [
 diff --git a/chromium/sandbox/linux/services/flatpak_pid_map.cc b/chromium/sandbox/linux/services/flatpak_pid_map.cc
 new file mode 100644
 index 00000000000..58b2ab55238
@@ -1213,7 +1214,7 @@ index 2701a2493dc..2130989446c 100644
      sources += [
        "linux/bpf_ime_policy_linux.cc",
 diff --git a/chromium/sandbox/policy/linux/sandbox_linux.cc b/chromium/sandbox/policy/linux/sandbox_linux.cc
-index bc45e252127..f4f5abc0ef1 100644
+index bc45e252127..2ec0ade3e46 100644
 --- a/chromium/sandbox/policy/linux/sandbox_linux.cc
 +++ b/chromium/sandbox/policy/linux/sandbox_linux.cc
 @@ -36,6 +36,7 @@
@@ -1238,25 +1239,25 @@ index bc45e252127..f4f5abc0ef1 100644
          sandbox_status_flags_ |= kPIDNS;
        if (NamespaceSandbox::InNewNetNamespace())
          sandbox_status_flags_ |= kNetNS;
-+      } else if (flatpak_sandbox_level_ ==
-+                 sandbox::FlatpakSandbox::SandboxLevel::kRestricted) {
-+        // Flatpak sandboxes always use new namespaces.
-+        sandbox_status_flags_ |= kFlatpak | kPIDNS | kNetNS;
++    } else if (flatpak_sandbox_level_ ==
++               sandbox::FlatpakSandbox::SandboxLevel::kRestricted) {
++      // Flatpak sandboxes always use new namespaces.
++      sandbox_status_flags_ |= kFlatpak | kPIDNS | kNetNS;
      }
  
      // We report whether the sandbox will be activated when renderers, workers
 diff --git a/chromium/sandbox/policy/linux/sandbox_linux.h b/chromium/sandbox/policy/linux/sandbox_linux.h
-index 34f24118a81..646be7e80ee 100644
+index 34f24118a81..8a97b2da3d4 100644
 --- a/chromium/sandbox/policy/linux/sandbox_linux.h
 +++ b/chromium/sandbox/policy/linux/sandbox_linux.h
-@@ -13,6 +13,7 @@
+@@ -12,6 +12,7 @@
+ #include "base/check_op.h"
  #include "base/memory/raw_ptr.h"
  #include "base/posix/global_descriptors.h"
- #include "base/sanitizer_buildflags.h"
 +#include "sandbox/linux/services/flatpak_sandbox.h"
+ #include "base/sanitizer_buildflags.h"
  #include "sandbox/linux/syscall_broker/broker_command.h"
  #include "sandbox/linux/syscall_broker/broker_file_permission.h"
- #include "sandbox/policy/export.h"
 @@ -91,6 +92,9 @@ class SANDBOX_POLICY_EXPORT SandboxLinux {
      // User namespace sandbox active.
      kUserNS = 1 << 6,
@@ -1267,17 +1268,16 @@ index 34f24118a81..646be7e80ee 100644
      // A flag that denotes an invalid sandbox status.
      kInvalid = 1 << 31,
    };
-@@ -296,6 +300,10 @@ class SANDBOX_POLICY_EXPORT SandboxLinux {
+@@ -295,6 +299,9 @@ class SANDBOX_POLICY_EXPORT SandboxLinux {
+   bool seccomp_bpf_supported_;             // Accurate if pre_initialized_.
    bool seccomp_bpf_with_tsync_supported_;  // Accurate if pre_initialized_.
    bool yama_is_enforcing_;                 // Accurate if pre_initialized_.
-   bool initialize_sandbox_ran_;            // InitializeSandbox() was called.
-+  // Accurate if pre_initialized_, used to save the state of the Flatpak
-+  // sandbox, as once we're in the BPF sandbox any attempts to check the Flatpak
-+  // state will cause EPERM errors.
++  // Accurate if pre_initialized_, used to save the state of the Flatpak sandbox, as once
++  // we're in the BPF sandbox any attempts to check the Flatpak state will cause EPERM errors.
 +  sandbox::FlatpakSandbox::SandboxLevel flatpak_sandbox_level_;
+   bool initialize_sandbox_ran_;            // InitializeSandbox() was called.
    std::unique_ptr<SetuidSandboxClient> setuid_sandbox_client_;
  #if BUILDFLAG(USING_SANITIZER)
-   std::unique_ptr<__sanitizer_sandbox_arguments> sanitizer_args_;
 diff --git a/chromium/services/service_manager/service_process_launcher.cc b/chromium/services/service_manager/service_process_launcher.cc
 index a34c819f8d0..4cd40f01bdb 100644
 --- a/chromium/services/service_manager/service_process_launcher.cc
