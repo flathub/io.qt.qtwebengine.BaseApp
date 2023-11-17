@@ -1,21 +1,48 @@
 {
     "name": "re2",
-    "no-autogen": true,
-    "install-rule": "shared-install",
-    "make-install-args": [
-        "prefix=${FLATPAK_DEST}"
-    ],
-    "sources": [
+    "modules": [
         {
-            "type": "archive",
-            "url": "https://github.com/google/re2/archive/2023-02-01/re2-2023-02-01.tar.gz",
-            "sha256": "cbce8b7803e856827201a132862e41af386e7afd9cc6d9a9bc7a4fa4d8ddbdde",
-            "x-checker-data": {
-                "type": "anitya",
-                "project-id": 10500,
-                "stable-only": true,
-                "url-template": "https://github.com/google/re2/archive/$version/re2-$version.tar.gz"
-            }
+            "name": "abseil-cpp",
+            "buildsystem": "cmake-ninja",
+            "config-opts": [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DBUILD_SHARED_LIBS=ON",
+                "-DCMAKE_CXX_STANDARD=17"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.1.tar.gz",
+                    "sha256": "987ce98f02eefbaf930d6e38ab16aa05737234d7afbab2d5c4ea7adbe50c28ed",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 115295,
+                        "stable-only": true,
+                        "url-template": "https://github.com/abseil/abseil-cpp/archive/refs/tags/$version.tar.gz"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "re2",
+            "no-autogen": true,
+            "install-rule": "shared-install",
+            "make-install-args": [
+                "prefix=${FLATPAK_DEST}"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/google/re2/archive/2023-11-01/re2-2023-11-01.tar.gz",
+                    "sha256": "4e6593ac3c71de1c0f322735bc8b0492a72f66ffccfad76e259fa21c41d27d8a",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 10500,
+                        "stable-only": true,
+                        "url-template": "https://github.com/google/re2/archive/$version/re2-$version.tar.gz"
+                    }
+                }
+            ]
         }
     ]
 }
