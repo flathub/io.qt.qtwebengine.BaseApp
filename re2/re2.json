@@ -9,13 +9,7 @@
         {
             "type": "archive",
             "url": "https://github.com/google/re2/archive/2023-03-01/re2-2023-03-01.tar.gz",
-            "sha256": "7a9a4824958586980926a300b4717202485c4b4115ac031822e29aa4ef207e48",
-            "x-checker-data": {
-                "type": "anitya",
-                "project-id": 10500,
-                "stable-only": true,
-                "url-template": "https://github.com/google/re2/archive/$version/re2-$version.tar.gz"
-            }
+            "sha256": "7a9a4824958586980926a300b4717202485c4b4115ac031822e29aa4ef207e48"
         }
     ]
 }
