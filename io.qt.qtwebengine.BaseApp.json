@@ -153,6 +153,19 @@
             ]
         },
         "qtwebengine-dictionaries/qtwebengine-dictionaries.json",
-        "qt5-webview/qt5-webview.json"
+        "qt5-webview/qt5-webview.json",
+        {
+            "name": "flathub-json",
+            "buildsystem": "simple",
+            "build-commands": [
+                "cp flathub.json ${FLATPAK_DEST}/flathub.json"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "flathub.json"
+                }
+            ]
+        }
     ]
 }
