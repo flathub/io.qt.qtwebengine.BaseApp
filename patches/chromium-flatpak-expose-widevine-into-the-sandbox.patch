@@ -10,21 +10,19 @@ Subject: [PATCH 2/2] flatpak: Expose Widevine into the sandbox
  3 files changed, 131 insertions(+), 24 deletions(-)
 
 diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-index df30e4bf605..89aa041b106 100644
+index f48426cfef8..afbba09fe2c 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 +++ b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-@@ -10,7 +10,10 @@
- 
- #include "base/allocator/allocator_extension.h"
+@@ -12,6 +12,8 @@
  #include "base/files/file_enumerator.h"
-+#include "base/files/file_util.h"
+ #include "base/files/file_util.h"
  #include "base/logging.h"
 +#include "base/nix/xdg_util.h"
 +#include "base/path_service.h"
  #include "base/posix/unix_domain_socket.h"
  #include "base/process/kill.h"
  #include "base/process/launch.h"
-@@ -18,10 +21,13 @@
+@@ -19,10 +21,13 @@
  #include "base/strings/string_number_conversions.h"
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
@@ -38,7 +36,7 @@ index df30e4bf605..89aa041b106 100644
  #include "sandbox/linux/services/credentials.h"
  #include "sandbox/linux/services/flatpak_sandbox.h"
  #include "sandbox/linux/services/namespace_sandbox.h"
-@@ -29,6 +35,7 @@
+@@ -30,6 +35,7 @@
  #include "sandbox/linux/suid/common/sandbox.h"
  #include "sandbox/policy/linux/sandbox_linux.h"
  #include "sandbox/policy/switches.h"
@@ -46,7 +44,7 @@ index df30e4bf605..89aa041b106 100644
  
  #if BUILDFLAG(IS_CHROMEOS)
  #include "content/common/zygote/zygote_communication_linux.h"
-@@ -187,8 +194,51 @@ pid_t ZygoteHostImpl::LaunchZygote(
+@@ -195,8 +201,51 @@ pid_t ZygoteHostImpl::LaunchZygote(
    if (is_sandboxed_zygote && use_namespace_sandbox_) {
      process = sandbox::NamespaceSandbox::LaunchProcess(*cmd_line, options);
    } else if (is_sandboxed_zygote && use_flatpak_sandbox_) {
