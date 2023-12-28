@@ -19,8 +19,8 @@
         {
             "type": "git",
             "url": "https://github.com/google/snappy.git",
-            "tag": "1.1.9",
-            "commit": "2b63814b15a2aaae54b7943f0cd935892fae628f",
+            "tag": "1.1.10",
+            "commit": "dc05e026488865bc69313a68bcc03ef2e4ea8e83",
             "x-checker-data": {
                 "type": "anitya",
                 "project-id": 4844,
@@ -31,10 +31,6 @@
         {
             "type": "file",
             "path": "snappy.pc.in"
-        },
-        {
-            "type": "patch",
-            "path": "add-inline-with-snappy_attribute_always_inline.patch"
         },
         {
             "type": "patch",
