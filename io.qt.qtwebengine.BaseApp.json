@@ -137,6 +137,7 @@
                         "rm -rfv ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/*.prl",
                         "rm -rfv ${FLATPAK_DEST}/libexec/{gn,qwebengine_convert_dict}",
                         "rmdir -v --ignore-fail-on-non-empty ${FLATPAK_DEST}/libexec",
+                        "rm -rfv ${FLATPAK_DEST}/metatypes",
                         "rm -rfv ${FLATPAK_DEST}/mkspecs",
                         "rm -rfv ${FLATPAK_DEST}/modules",
                         "rm -rfv ${FLATPAK_DEST}/plugins/designer",
