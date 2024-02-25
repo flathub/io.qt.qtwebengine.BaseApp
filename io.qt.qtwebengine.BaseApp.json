@@ -114,10 +114,6 @@
             "buildsystem": "simple",
             "sources": [
                 {
-                    "type": "file",
-                    "path": "io.qt.qtwebengine.BaseApp.metainfo.xml"
-                },
-                {
                     "type": "script",
                     "dest-filename": "cleanup-BaseApp.sh",
                     "//": "https://github.com/flatpak/flatpak-builder/issues/233",
@@ -148,7 +144,6 @@
                 "sed -e 's@\\($$QT_MODULE_INCLUDE_BASE \\)@\\1'${FLATPAK_DEST}'/include @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/*.pri",
                 "sed -e 's@$$QT_MODULE_INCLUDE_BASE/@'${FLATPAK_DEST}'/include/@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/*.pri",
                 "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/*.pri",
-                "install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo",
                 "install cleanup-BaseApp.sh -t ${FLATPAK_DEST}"
             ]
         },
