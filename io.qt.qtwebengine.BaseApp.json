@@ -103,10 +103,6 @@
             "buildsystem": "simple",
             "sources": [
                 {
-                    "type": "file",
-                    "path": "io.qt.qtwebengine.BaseApp.metainfo.xml"
-                },
-                {
                     "type": "script",
                     "dest-filename": "cleanup-BaseApp.sh",
                     "//": "https://github.com/flatpak/flatpak-builder/issues/233",
