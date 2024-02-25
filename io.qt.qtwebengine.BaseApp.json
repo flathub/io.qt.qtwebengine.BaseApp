@@ -125,7 +125,6 @@
                         "rm -rfv ${FLATPAK_DEST}/mkspecs",
                         "rm -rfv ${FLATPAK_DEST}/modules",
                         "rm -rfv ${FLATPAK_DEST}/plugins/designer",
-                        "rm -rfv ${FLATPAK_DEST}/share/{metainfo,appdata}/io.qt.qtwebengine.BaseApp.*.xml",
                         "rm -rfv $(readlink -f \"$0\")"
                     ]
                 }
@@ -138,7 +137,6 @@
                 "sed -e 's@\\($$QT_MODULE_INCLUDE_BASE \\)@\\1'${FLATPAK_DEST}'/include @' -i ${FLATPAK_DEST}/mkspecs/modules/*.pri",
                 "sed -e 's@$$QT_MODULE_INCLUDE_BASE/@'${FLATPAK_DEST}'/include/@g' -i ${FLATPAK_DEST}/mkspecs/modules/*.pri",
                 "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/mkspecs/modules/*.pri",
-                "install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo",
                 "install cleanup-BaseApp.sh -t ${FLATPAK_DEST}"
             ]
         },
