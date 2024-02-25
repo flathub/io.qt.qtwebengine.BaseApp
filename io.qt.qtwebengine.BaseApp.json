@@ -42,8 +42,8 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.6.1",
-                    "commit": "8c1db3e41dfd09863300653566a4a09c3ef08f59",
+                    "tag": "v6.6.2",
+                    "commit": "6c30503061d813cae5824d7fb82848ef240b5e28",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
