@@ -7,6 +7,17 @@ If you just found this base application, then you might also be interested in th
 
 *To help improving this documentation, open a pull request against the [wiki branch](https://github.com/flathub/io.qt.qtwebengine.BaseApp/tree/wiki).*
 
+## Supported branches
+
+Any branch based on a non-EOL base runtime should be supported. Branches are considered end-of-life when the base branch is EOL. The current list of supported branches is:
+
+|Baseapp branch     |Base branch   |Qt Webengine version|
+|-------------------|--------------|--------------------|
+|`branch/5.15-22.08`|5.15-22.08    |5.15.x-lts          |
+|`branch/5.15-23.08`|5.15-23.08    |5.15.x-lts          |
+|`branch/6.5`       |6.5           |6.5.x               |
+|`branch/6.6`       |6.6           |6.6.x               |
+
 ## Features
 
 ### Included libraries
@@ -43,7 +54,7 @@ During packaging of a Flatpak application there is no session bus socket in the 
 needs running QtWebEngine, then it will fail.  
 The workaround is to disable sandboxing like this:
 
-```
+```yaml
 build-options:
   env:
     QTWEBENGINE_DISABLE_SANDBOX: '1'
@@ -53,16 +64,41 @@ build-options:
 
 *Flatpak sandboxing support for Chromium was developed by [Ryan Gonzalez](https://refi64.com/) for the [Chromium Flatpak application](https://github.com/flathub/org.chromium.Chromium).*
 
+## QML
+
+QML modules for Qt Pdf, Webengine and Webview are located in `/app/qml`. If you rely on those you should add `QML_IMPORT_PATH=/app/qml` as an environment variable in your application manifest.
+
+## Pkgconfig files
+
+Qt webengine installs some pkgconfig files in `/app/lib/$(gcc --print-multiarch)/pkgconfig` which is not in the `PKG_CONFIG_PATH` set by `flatpak-builder`. If your program relies on them at build time you need to use `append-pkg-config-path` or `prepend-pkg-config-path` in the manifest.
+
+```yaml
+build-options:
+  arch:
+    aarch64:
+      prepend-pkg-config-path: /app/lib/aarch64-linux-gnu/pkgconfig
+    x86_64:
+      prepend-pkg-config-path: /app/lib/x86_64-linux-gnu/pkgconfig
+```
+
+## Cleanup
+
+Please make sure to cleanup development files from the BaseApp, in the application
+
+```yaml
+cleanup-commands:
+  - /app/cleanup-BaseApp.sh
+```
 
 ## Example QtWebEngine Application
 
-```
-app-id: org.kde.QtWebEngine.SampleApplication
+```yaml
+id: org.kde.QtWebEngine.SampleApplication
 runtime: org.kde.Platform
-runtime-version: '6.3'
+runtime-version: '6.6'
 sdk: org.kde.Sdk
 base: io.qt.qtwebengine.BaseApp
-base-version: '6.3'
+base-version: '6.6'
 command: qtwebengine-sample-application
 finish-args:
   - --device=dri
