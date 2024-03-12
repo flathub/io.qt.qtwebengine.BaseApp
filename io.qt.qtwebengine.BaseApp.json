@@ -35,8 +35,7 @@
             ],
             "post-install": [
                 "mv ${FLATPAK_DEST}/{libexec,bin}/QtWebEngineProcess",
-                "ln -sr ${FLATPAK_DEST}/{libexec,bin}/qwebengine_convert_dict",
-                "ln -sr ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/libQt*.so* -t ${FLATPAK_DEST}/lib/"
+                "ln -sr ${FLATPAK_DEST}/{libexec,bin}/qwebengine_convert_dict"
             ],
             "sources": [
                 {
@@ -153,6 +152,13 @@
             ]
         },
         "qtwebengine-dictionaries/qtwebengine-dictionaries.json",
-        "qt6-webview/qt6-webview.json"
+        "qt6-webview/qt6-webview.json",
+        {
+            "name": "symlink",
+            "buildsystem": "simple",
+            "build-commands": [
+                "ln -sr ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/libQt*.so* -t ${FLATPAK_DEST}/lib/"
+            ]
+        }
     ]
 }
