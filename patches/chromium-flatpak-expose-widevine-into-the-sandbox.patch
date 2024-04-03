@@ -1,16 +1,16 @@
-From fd6e4d8af5d08da63e4e9d2d1ac4ef290cceab80 Mon Sep 17 00:00:00 2001
-From: Ryan Gonzalez <rymg19@gmail.com>
-Date: Tue, 17 Nov 2020 13:00:39 -0600
-Subject: [PATCH 2/2] flatpak: Expose Widevine into the sandbox
+From cb527447b072a754bf43ef7ca9b700e2dd014665 Mon Sep 17 00:00:00 2001
+From: bbhtt <bbhtt.zn0i8@slmail.me>
+Date: Wed, 3 Apr 2024 18:35:25 +0530
+Subject: [PATCH 4/4] chromium-flatpak-expose-widevine-into-the-sandbox
 
 ---
- .../zygote_host/zygote_host_impl_linux.cc     | 54 +++++++++++++-
+ .../zygote_host/zygote_host_impl_linux.cc     | 53 ++++++++++++-
  .../sandbox/linux/services/flatpak_sandbox.cc | 74 ++++++++++++++-----
  .../sandbox/linux/services/flatpak_sandbox.h  | 27 ++++++-
- 3 files changed, 131 insertions(+), 24 deletions(-)
+ 3 files changed, 130 insertions(+), 24 deletions(-)
 
 diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-index f48426cfef8..afbba09fe2c 100644
+index 5d14621e7d0..bdd73201888 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 +++ b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 @@ -12,6 +12,8 @@
@@ -321,5 +321,5 @@ index 167bbc85945..de8e7165b45 100644
                         base::WaitableEvent* event,
                         dbus::Response* response,
 -- 
-2.41.0
+2.44.0
 

@@ -1,18 +1,18 @@
-From efce319233a5bb6d6bd88e8cdb13afb2998378a6 Mon Sep 17 00:00:00 2001
-From: Ryan Gonzalez <rymg19@gmail.com>
-Date: Tue, 25 Aug 2020 19:26:07 -0500
-Subject: [PATCH 1/2] flatpak: Adjust paths for the sandbox
+From a6595418c6e304d8dc0cab1e7ff61921e8851c2b Mon Sep 17 00:00:00 2001
+From: bbhtt <bbhtt.zn0i8@slmail.me>
+Date: Wed, 3 Apr 2024 18:34:41 +0530
+Subject: [PATCH 3/4] chromium-flatpak-adjust-paths-for-the-sandbox
 
 ---
- chromium/chrome/common/BUILD.gn        |  4 +++
- chromium/chrome/common/chrome_paths.cc | 43 ++++++++++++++++++++------
- 2 files changed, 38 insertions(+), 9 deletions(-)
+ chromium/chrome/common/BUILD.gn        |  4 ++++
+ chromium/chrome/common/chrome_paths.cc | 27 +++++++++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
 diff --git a/chromium/chrome/common/BUILD.gn b/chromium/chrome/common/BUILD.gn
-index dbee3c01723..e3bc3481811 100644
+index c2a7e888359..3448a637ab1 100644
 --- a/chromium/chrome/common/BUILD.gn
 +++ b/chromium/chrome/common/BUILD.gn
-@@ -654,6 +654,10 @@ static_library("constants") {
+@@ -690,6 +690,10 @@ static_library("constants") {
        "//third_party/widevine/cdm:headers",
      ]
    }
@@ -24,17 +24,17 @@ index dbee3c01723..e3bc3481811 100644
  
  # Use a static library here because many test binaries depend on this but don't
 diff --git a/chromium/chrome/common/chrome_paths.cc b/chromium/chrome/common/chrome_paths.cc
-index 8f7c1e27f16..98a63f6dde2 100644
+index 1d75edad247..5d96fad0c8a 100644
 --- a/chromium/chrome/common/chrome_paths.cc
 +++ b/chromium/chrome/common/chrome_paths.cc
-@@ -4,6 +4,7 @@
+@@ -3,6 +3,7 @@
+ // found in the LICENSE file.
  
  #include "chrome/common/chrome_paths.h"
- 
 +#include "base/files/file_path.h"
+ 
+ #include "base/files/file_path.h"
  #include "base/files/file_util.h"
- #include "base/logging.h"
- #include "base/native_library.h"
 @@ -38,6 +39,10 @@
  #include "base/win/registry.h"
  #endif
@@ -46,18 +46,7 @@ index 8f7c1e27f16..98a63f6dde2 100644
  #if BUILDFLAG(ENABLE_WIDEVINE)
  #include "third_party/widevine/cdm/widevine_cdm_common.h"  // nogncheck
  #endif
-@@ -192,8 +197,8 @@ bool PathProvider(int key, base::FilePath* result) {
- #else
-       if (!GetUserDownloadsDirectory(&cur))
-         return false;
--      // Do not create the download directory here, we have done it twice now
--      // and annoyed a lot of users.
-+        // Do not create the download directory here, we have done it twice now
-+        // and annoyed a lot of users.
- #endif
-       break;
-     case chrome::DIR_CRASH_DUMPS:
-@@ -423,6 +428,14 @@ bool PathProvider(int key, base::FilePath* result) {
+@@ -506,6 +511,14 @@ bool PathProvider(int key, base::FilePath* result) {
        break;
  #if BUILDFLAG(IS_POSIX) && !BUILDFLAG(IS_MAC) && !BUILDFLAG(IS_OPENBSD)
      case chrome::DIR_POLICY_FILES: {
@@ -69,10 +58,10 @@ index 8f7c1e27f16..98a63f6dde2 100644
 +        break;
 +      }
 +#endif
- #if BUILDFLAG(GOOGLE_CHROME_BRANDING)
-       cur = base::FilePath(FILE_PATH_LITERAL("/etc/opt/chrome/policies"));
- #else
-@@ -446,7 +459,13 @@ bool PathProvider(int key, base::FilePath* result) {
+       cur = base::FilePath(policy::kPolicyPath);
+       break;
+     }
+@@ -526,7 +539,13 @@ bool PathProvider(int key, base::FilePath* result) {
  #endif
  #if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
      case chrome::DIR_STANDALONE_EXTERNAL_EXTENSIONS: {
@@ -81,22 +70,13 @@ index 8f7c1e27f16..98a63f6dde2 100644
 +          sandbox::FlatpakSandbox::SandboxLevel::kNone) {
 +        cur = base::FilePath(
 +            FILE_PATH_LITERAL("/app/chromium/extensions/extensions"));
-+      } else {
-+        cur = base::FilePath(kFilepathSinglePrefExtensions);
-+      }
++        } else {
++          cur = base::FilePath(kFilepathSinglePrefExtensions);
++        }
        break;
      }
  #endif
-@@ -492,19 +511,25 @@ bool PathProvider(int key, base::FilePath* result) {
-     case chrome::DIR_NATIVE_MESSAGING:
- #if BUILDFLAG(IS_MAC)
- #if BUILDFLAG(GOOGLE_CHROME_BRANDING)
--      cur = base::FilePath(FILE_PATH_LITERAL(
--           "/Library/Google/Chrome/NativeMessagingHosts"));
-+      cur = base::FilePath(
-+          FILE_PATH_LITERAL("/Library/Google/Chrome/NativeMessagingHosts"));
- #else
-       cur = base::FilePath(FILE_PATH_LITERAL(
+@@ -582,6 +601,12 @@ bool PathProvider(int key, base::FilePath* result) {
            "/Library/Application Support/Chromium/NativeMessagingHosts"));
  #endif
  #else  // BUILDFLAG(IS_MAC)
@@ -107,18 +87,8 @@ index 8f7c1e27f16..98a63f6dde2 100644
 +        break;
 +      }
  #if BUILDFLAG(GOOGLE_CHROME_BRANDING)
--      cur = base::FilePath(FILE_PATH_LITERAL(
--          "/etc/opt/chrome/native-messaging-hosts"));
-+      cur = base::FilePath(
-+          FILE_PATH_LITERAL("/etc/opt/chrome/native-messaging-hosts"));
- #else
--      cur = base::FilePath(FILE_PATH_LITERAL(
--          "/etc/chromium/native-messaging-hosts"));
-+      cur = base::FilePath(
-+          FILE_PATH_LITERAL("/etc/chromium/native-messaging-hosts"));
- #endif
- #endif  // !BUILDFLAG(IS_MAC)
-       break;
+       cur = base::FilePath(
+           FILE_PATH_LITERAL("/etc/opt/chrome/native-messaging-hosts"));
 -- 
-2.41.0
+2.44.0
 
