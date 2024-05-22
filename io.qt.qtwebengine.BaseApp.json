@@ -85,10 +85,6 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/python3.patch"
-                },
-                {
-                    "type": "patch",
                     "paths": [
                         "patches/chromium-add-app-libdir.patch",
                         "patches/chromium-python3.patch",
