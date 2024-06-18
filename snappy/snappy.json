@@ -19,8 +19,8 @@
         {
             "type": "git",
             "url": "https://github.com/google/snappy.git",
-            "tag": "1.2.0",
-            "commit": "23b3286820105438c5dbb9bc22f1bb85c5812c8a",
+            "tag": "1.2.1",
+            "commit": "2c94e11145f0b7b184b831577c93e5a41c4c0346",
             "x-checker-data": {
                 "type": "anitya",
                 "project-id": 4844,
