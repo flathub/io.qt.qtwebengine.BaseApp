@@ -1,13 +1,13 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "6.7",
+    "branch": "6.8",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
-        "org.freedesktop.Sdk.Extension.node18"
+        "org.freedesktop.Sdk.Extension.node20"
     ],
-    "runtime-version": "6.7",
+    "runtime-version": "6.8",
     "separate-locales": false,
     "modules": [
         {
@@ -15,9 +15,9 @@
             "buildsystem": "cmake-ninja",
             "builddir": true,
             "build-options": {
-                "append-path": "/usr/lib/sdk/node18/bin",
+                "append-path": "/usr/lib/sdk/node20/bin",
                 "env": [
-                    "npm_config_nodedir=/usr/lib/sdk/node18"
+                    "npm_config_nodedir=/usr/lib/sdk/node20"
                 ]
             },
             "config-opts": [
@@ -41,13 +41,13 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.7.3",
-                    "commit": "d29628dfd9f78da12afe8d6072e8e6358cded301",
+                    "tag": "v6.8.0",
+                    "commit": "583cf6b8ea10debf2c4ff98592d8f992ce8f560c",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
-                        "tag-query": "first(.[].name | match( \"v6.7[\\\\d.]+-lts|v6.7[\\\\d.]+\" ) | .string)",
+                        "tag-query": "first(.[].name | match( \"v6.8[\\\\d.]+-lts|v6.8[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
                     }
