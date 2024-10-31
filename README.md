@@ -62,8 +62,11 @@ build-options:
 QML modules for Qt Pdf, Webengine and Webview are located in `/app/lib/qml`
 for 6.8+ branches and `/app/qml` for branches earlier that 6.8.
 
-If you rely on those you should add `--env=QML_IMPORT_PATH=<path>` as an
-environment variable in your application manifest.
+Apps using branches 6.8+, do not need to set anything as that is done by
+the runtime and it should work by default.
+
+Anyone else should set `--env=QML_IMPORT_PATH=<path>` as a finish-arg
+in the application manifest.
 
 ## Pkgconfig files
 
