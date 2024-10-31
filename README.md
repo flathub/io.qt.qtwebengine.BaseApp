@@ -14,8 +14,8 @@ Any branch based on a non-EOL base runtime should be supported. Branches are con
 |Baseapp branch     |Base branch   |Qt Webengine version|
 |-------------------|--------------|--------------------|
 |`branch/5.15-23.08`|5.15-23.08    |5.15.x-lts          |
-|`branch/6.6`       |6.6           |6.6.x               |
 |`branch/6.7`       |6.7           |6.7.x               |
+|`branch/6.8`       |6.8           |6.8.x               |
 
 ## Features
 
@@ -59,7 +59,11 @@ build-options:
 
 ## QML
 
-QML modules for Qt Pdf, Webengine and Webview are located in `/app/qml`. If you rely on those you should add `QML_IMPORT_PATH=/app/qml` as an environment variable in your application manifest.
+QML modules for Qt Pdf, Webengine and Webview are located in `/app/lib/qml`
+for 6.8+ branches and `/app/qml` for branches earlier that 6.8.
+
+If you rely on those you should add `--env=QML_IMPORT_PATH=<path>` as an
+environment variable in your application manifest.
 
 ## Pkgconfig files
 
@@ -88,10 +92,10 @@ cleanup-commands:
 ```yaml
 id: org.kde.QtWebEngine.SampleApplication
 runtime: org.kde.Platform
-runtime-version: '6.6'
+runtime-version: '6.8'
 sdk: org.kde.Sdk
 base: io.qt.qtwebengine.BaseApp
-base-version: '6.6'
+base-version: '6.8'
 command: qtwebengine-sample-application
 finish-args:
   - --device=dri
