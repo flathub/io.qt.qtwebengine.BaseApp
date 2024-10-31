@@ -1,7 +1,7 @@
-From a7875292632c3d9f2975eea0460f22a644b7a345 Mon Sep 17 00:00:00 2001
+From a7218454a0c64a8bda081382dd5af664bc721a82 Mon Sep 17 00:00:00 2001
 From: bbhtt <bbhtt.zn0i8@slmail.me>
-Date: Wed, 3 Apr 2024 08:34:02 +0530
-Subject: [PATCH 2/4] chromium-flatpak-add-initial-sandbox-support
+Date: Thu, 31 Oct 2024 11:14:57 +0530
+Subject: [PATCH] flatpak: Add initial sandbox support
 
 ---
  chromium/base/threading/thread_restrictions.h |   5 +
@@ -19,9 +19,9 @@ Subject: [PATCH 2/4] chromium-flatpak-add-initial-sandbox-support
  .../sandbox/linux/services/flatpak_sandbox.cc | 576 ++++++++++++++++++
  .../sandbox/linux/services/flatpak_sandbox.h  | 118 ++++
  chromium/sandbox/policy/BUILD.gn              |   3 +
- .../sandbox/policy/linux/sandbox_linux.cc     |   7 +
+ .../sandbox/policy/linux/sandbox_linux.cc     |   8 +
  chromium/sandbox/policy/linux/sandbox_linux.h |   8 +
- .../service_process_launcher.cc               |  11 +-
+ .../service_process_launcher.cc               |  10 +-
  18 files changed, 903 insertions(+), 19 deletions(-)
  create mode 100644 chromium/sandbox/linux/services/flatpak_pid_map.cc
  create mode 100644 chromium/sandbox/linux/services/flatpak_pid_map.h
@@ -29,20 +29,20 @@ Subject: [PATCH 2/4] chromium-flatpak-add-initial-sandbox-support
  create mode 100644 chromium/sandbox/linux/services/flatpak_sandbox.h
 
 diff --git a/chromium/base/threading/thread_restrictions.h b/chromium/base/threading/thread_restrictions.h
-index 5c465e4e800..d47f9a01676 100644
+index c9df16e506d..d17835d7bf4 100644
 --- a/chromium/base/threading/thread_restrictions.h
 +++ b/chromium/base/threading/thread_restrictions.h
-@@ -377,6 +377,9 @@ class ScopedAllowSyncPrimitivesForWebRtcTransport;
- class ScopedAllowThreadJoinForWebRtcTransport;
- }  // namespace protocol
- }  // namespace remoting
-+namespace sandbox {
-+class FlatpakSandbox;
-+}
+@@ -390,6 +390,9 @@ class ScopedAllowThreadJoinForWebRtcTransport;
  namespace rlz_lib {
  class FinancialPing;
  }
-@@ -629,6 +632,7 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBlocking {
++namespace sandbox {
++class FlatpakSandbox;
++}
+ namespace service_manager {
+ class ServiceProcessLauncher;
+ }
+@@ -644,6 +647,7 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBlocking {
    friend class remoting::
        ScopedBypassIOThreadRestrictions;  // http://crbug.com/1144161
    friend class remoting::ScopedAllowBlockingForCrashReporting;
@@ -50,7 +50,7 @@ index 5c465e4e800..d47f9a01676 100644
    friend class ui::DrmDisplayHostManager;
    friend class ui::ScopedAllowBlockingForGbmSurface;
    friend class ui::SelectFileDialogLinux;
-@@ -768,6 +772,7 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBaseSyncPrimitives {
+@@ -789,6 +793,7 @@ class BASE_EXPORT [[maybe_unused, nodiscard]] ScopedAllowBaseSyncPrimitives {
    friend class rlz_lib::FinancialPing;
    friend class shell_integration_linux::
        LaunchXdgUtilityScopedAllowBaseSyncPrimitives;
@@ -59,7 +59,7 @@ index 5c465e4e800..d47f9a01676 100644
    friend class syncer::HttpBridge;
    friend class syncer::GetLocalChangesRequest;
 diff --git a/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.ts b/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.ts
-index 85c0d35f98e..98bd35a1a57 100644
+index f6d2f3f0bc4..fcc58c6735e 100644
 --- a/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.ts
 +++ b/chromium/chrome/browser/resources/sandbox_internals/sandbox_internals.ts
 @@ -140,6 +140,7 @@ function addGoodBadRow(name: string, result: boolean): HTMLElement {
@@ -81,7 +81,7 @@ index 85c0d35f98e..98bd35a1a57 100644
  
    addStatusRow('Layer 1 Sandbox', layer1SandboxType, layer1SandboxCssClass);
 diff --git a/chromium/chrome/browser/ui/webui/sandbox/sandbox_internals_ui.cc b/chromium/chrome/browser/ui/webui/sandbox/sandbox_internals_ui.cc
-index 1abd5c9b96e..ece59a99d66 100644
+index f30734e12ce..a238708b4d2 100644
 --- a/chromium/chrome/browser/ui/webui/sandbox/sandbox_internals_ui.cc
 +++ b/chromium/chrome/browser/ui/webui/sandbox/sandbox_internals_ui.cc
 @@ -13,6 +13,7 @@
@@ -111,7 +111,7 @@ index 1abd5c9b96e..ece59a99d66 100644
                       status & sandbox::policy::SandboxLinux::kNetNS;
    // A second-layer sandbox is also required to be adequately sandboxed.
 diff --git a/chromium/content/browser/child_process_host_impl.cc b/chromium/content/browser/child_process_host_impl.cc
-index d476c135ad5..a7afde40963 100644
+index d14b26fdf0b..c4dbeafd4c9 100644
 --- a/chromium/content/browser/child_process_host_impl.cc
 +++ b/chromium/content/browser/child_process_host_impl.cc
 @@ -40,6 +40,7 @@
@@ -137,10 +137,10 @@ index d476c135ad5..a7afde40963 100644
    }
  #endif
 diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-index d167e19a8fc..5d14621e7d0 100644
+index 71811d8a0eb..84965a7b03b 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 +++ b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-@@ -14,6 +14,7 @@
+@@ -13,6 +13,7 @@
  #include "base/logging.h"
  #include "base/posix/unix_domain_socket.h"
  #include "base/process/kill.h"
@@ -148,7 +148,7 @@ index d167e19a8fc..5d14621e7d0 100644
  #include "base/process/memory.h"
  #include "base/strings/string_number_conversions.h"
  #include "build/build_config.h"
-@@ -23,6 +24,7 @@
+@@ -22,6 +23,7 @@
  #include "content/common/zygote/zygote_handle_impl_linux.h"
  #include "content/public/common/zygote/zygote_handle.h"
  #include "sandbox/linux/services/credentials.h"
@@ -156,7 +156,7 @@ index d167e19a8fc..5d14621e7d0 100644
  #include "sandbox/linux/services/namespace_sandbox.h"
  #include "sandbox/linux/suid/client/setuid_sandbox_host.h"
  #include "sandbox/linux/suid/common/sandbox.h"
-@@ -72,6 +74,7 @@ ZygoteHostImpl::ZygoteHostImpl()
+@@ -71,6 +73,7 @@ ZygoteHostImpl::ZygoteHostImpl()
      : use_namespace_sandbox_(false),
        use_suid_sandbox_(false),
        use_suid_sandbox_for_adj_oom_score_(false),
@@ -164,7 +164,7 @@ index d167e19a8fc..5d14621e7d0 100644
        sandbox_binary_(),
        zygote_pids_lock_(),
        zygote_pids_() {}
-@@ -110,9 +113,12 @@ void ZygoteHostImpl::Init(const base::CommandLine& command_line) {
+@@ -109,9 +112,12 @@ void ZygoteHostImpl::Init(const base::CommandLine& command_line) {
      sandbox_binary_ = setuid_sandbox_host->GetSandboxBinaryPath().value();
    }
  
@@ -176,11 +176,11 @@ index d167e19a8fc..5d14621e7d0 100644
 +    use_flatpak_sandbox_ = true;
 +  } else if (!command_line.HasSwitch(
 +                sandbox::policy::switches::kDisableNamespaceSandbox) &&
-+            sandbox::Credentials::CanCreateProcessInNewUserNS()) {
++              sandbox::Credentials::CanCreateProcessInNewUserNS()) {
      use_namespace_sandbox_ = true;
    } else if (!command_line.HasSwitch(
                   sandbox::policy::switches::kDisableSetuidSandbox) &&
-@@ -185,10 +191,16 @@ pid_t ZygoteHostImpl::LaunchZygote(
+@@ -178,10 +184,16 @@ pid_t ZygoteHostImpl::LaunchZygote(
      sandbox_host->SetupLaunchEnvironment();
    }
  
@@ -195,13 +195,13 @@ index d167e19a8fc..5d14621e7d0 100644
 +    process = sandbox::FlatpakSandbox::GetInstance()->LaunchProcess(*cmd_line,
 +                                                                    options);
 +  } else {
-+    process = base::LaunchProcess(*cmd_line, options);
++      process = base::LaunchProcess(*cmd_line, options);
 +  }
 +
    CHECK(process.IsValid()) << "Failed to launch zygote process";
  
    dummy_fd.reset();
-@@ -197,7 +209,8 @@ pid_t ZygoteHostImpl::LaunchZygote(
+@@ -190,7 +202,8 @@ pid_t ZygoteHostImpl::LaunchZygote(
  
    pid_t pid = process.Pid();
  
@@ -211,7 +211,7 @@ index d167e19a8fc..5d14621e7d0 100644
      // The namespace and SUID sandbox will execute the zygote in a new
      // PID namespace, and the main zygote process will then fork from
      // there. Watch now our elaborate dance to find and validate the
-@@ -225,7 +238,11 @@ pid_t ZygoteHostImpl::LaunchZygote(
+@@ -218,7 +231,11 @@ pid_t ZygoteHostImpl::LaunchZygote(
  
      if (real_pid != pid) {
        // Reap the sandbox.
@@ -224,7 +224,7 @@ index d167e19a8fc..5d14621e7d0 100644
      }
      pid = real_pid;
    }
-@@ -276,6 +293,10 @@ void ZygoteHostImpl::AdjustRendererOOMScore(base::ProcessHandle pid,
+@@ -269,6 +286,10 @@ void ZygoteHostImpl::AdjustRendererOOMScore(base::ProcessHandle pid,
      selinux_valid = true;
    }
  
@@ -248,10 +248,10 @@ index 720d823d4a6..ad470963693 100644
  
    // This lock protects the |zygote_pids_| set.
 diff --git a/chromium/content/zygote/zygote_linux.cc b/chromium/content/zygote/zygote_linux.cc
-index bac30c699bf..26c0ac7e2fa 100644
+index 180e07984c5..cecd7edb453 100644
 --- a/chromium/content/zygote/zygote_linux.cc
 +++ b/chromium/content/zygote/zygote_linux.cc
-@@ -119,7 +119,7 @@ bool Zygote::ProcessRequests() {
+@@ -120,7 +120,7 @@ bool Zygote::ProcessRequests() {
    PCHECK(sigaddset(&sigset, SIGCHLD) == 0);
    PCHECK(sigprocmask(SIG_BLOCK, &sigset, &orig_sigmask) == 0);
  
@@ -260,7 +260,7 @@ index bac30c699bf..26c0ac7e2fa 100644
      // Let the ZygoteHost know we are ready to go.
      // The receiving code is in
      // content/browser/zygote_host/zygote_host_impl_linux.cc.
-@@ -225,6 +225,10 @@ bool Zygote::UsingNSSandbox() const {
+@@ -226,6 +226,10 @@ bool Zygote::UsingNSSandbox() const {
    return sandbox_flags_ & sandbox::policy::SandboxLinux::kUserNS;
  }
  
@@ -492,7 +492,7 @@ index 00000000000..22799eb42f7
 +#endif
 diff --git a/chromium/sandbox/linux/services/flatpak_sandbox.cc b/chromium/sandbox/linux/services/flatpak_sandbox.cc
 new file mode 100644
-index 00000000000..cdc225a18b8
+index 00000000000..2a915a5b9fa
 --- /dev/null
 +++ b/chromium/sandbox/linux/services/flatpak_sandbox.cc
 @@ -0,0 +1,576 @@
@@ -556,8 +556,8 @@ index 00000000000..cdc225a18b8
 +
 +void WriteStringAsByteArray(dbus::MessageWriter* writer,
 +                            const std::string& str) {
-+  writer->AppendArrayOfBytes(reinterpret_cast<const uint8_t*>(str.c_str()),
-+                             str.size() + 1);
++  writer->AppendArrayOfBytes(base::make_span(
++      reinterpret_cast<const uint8_t*>(str.c_str()), str.size() + 1));
 +}
 +
 +void WriteFdPairMap(dbus::MessageWriter* writer, int source_fd, int dest_fd) {
@@ -1197,10 +1197,10 @@ index 00000000000..167bbc85945
 +
 +#endif  // SANDBOX_LINUX_SERVICES_FLATPAK_SANDBOX_H_
 diff --git a/chromium/sandbox/policy/BUILD.gn b/chromium/sandbox/policy/BUILD.gn
-index 896ce8ab9b2..3177afe9ba7 100644
+index fa0edf457b6..43cd64ee831 100644
 --- a/chromium/sandbox/policy/BUILD.gn
 +++ b/chromium/sandbox/policy/BUILD.gn
-@@ -108,6 +108,9 @@ component("policy") {
+@@ -122,6 +122,9 @@ component("policy") {
        "//sandbox/linux:suid_sandbox_client",
      ]
    }
@@ -1211,7 +1211,7 @@ index 896ce8ab9b2..3177afe9ba7 100644
      sources += [
        "linux/bpf_ime_policy_linux.cc",
 diff --git a/chromium/sandbox/policy/linux/sandbox_linux.cc b/chromium/sandbox/policy/linux/sandbox_linux.cc
-index e77b8d40e32..18028c2bee0 100644
+index 8345e3ac09e..77bf80621df 100644
 --- a/chromium/sandbox/policy/linux/sandbox_linux.cc
 +++ b/chromium/sandbox/policy/linux/sandbox_linux.cc
 @@ -36,6 +36,7 @@
@@ -1222,28 +1222,29 @@ index e77b8d40e32..18028c2bee0 100644
  #include "sandbox/linux/services/libc_interceptor.h"
  #include "sandbox/linux/services/namespace_sandbox.h"
  #include "sandbox/linux/services/proc_util.h"
-@@ -204,6 +205,8 @@ bool SandboxLinux::PreinitializeSandbox() {
+@@ -221,6 +222,9 @@ bool SandboxLinux::PreinitializeSandbox() {
    const int yama_status = Yama::GetStatus();
    yama_is_enforcing_ = (yama_status & Yama::STATUS_PRESENT) &&
                         (yama_status & Yama::STATUS_ENFORCING);
++
 +  flatpak_sandbox_level_ =
 +      sandbox::FlatpakSandbox::GetInstance()->GetSandboxLevel();
    pre_initialized_ = true;
    return seccomp_bpf_supported_;
  }
-@@ -243,6 +246,10 @@ int SandboxLinux::GetStatus() {
+@@ -260,6 +264,10 @@ int SandboxLinux::GetStatus() {
          sandbox_status_flags_ |= kPIDNS;
        if (NamespaceSandbox::InNewNetNamespace())
          sandbox_status_flags_ |= kNetNS;
 +    } else if (flatpak_sandbox_level_ ==
-+              sandbox::FlatpakSandbox::SandboxLevel::kRestricted) {
++                sandbox::FlatpakSandbox::SandboxLevel::kRestricted) {
 +      // Flatpak sandboxes always use new namespaces.
 +      sandbox_status_flags_ |= kFlatpak | kPIDNS | kNetNS;
      }
  
      // We report whether the sandbox will be activated when renderers, workers
 diff --git a/chromium/sandbox/policy/linux/sandbox_linux.h b/chromium/sandbox/policy/linux/sandbox_linux.h
-index 34f24118a81..b95a97cfef0 100644
+index 34f24118a81..646be7e80ee 100644
 --- a/chromium/sandbox/policy/linux/sandbox_linux.h
 +++ b/chromium/sandbox/policy/linux/sandbox_linux.h
 @@ -13,6 +13,7 @@
@@ -1259,7 +1260,7 @@ index 34f24118a81..b95a97cfef0 100644
      kUserNS = 1 << 6,
  
 +    // Flatpak sandbox active.
-+     kFlatpak = 1 << 7,
++    kFlatpak = 1 << 7,
 +
      // A flag that denotes an invalid sandbox status.
      kInvalid = 1 << 31,
@@ -1276,10 +1277,10 @@ index 34f24118a81..b95a97cfef0 100644
  #if BUILDFLAG(USING_SANITIZER)
    std::unique_ptr<__sanitizer_sandbox_arguments> sanitizer_args_;
 diff --git a/chromium/services/service_manager/service_process_launcher.cc b/chromium/services/service_manager/service_process_launcher.cc
-index 7f4f7e76bb3..7de6c4c38ed 100644
+index 7f4f7e76bb3..91791591c55 100644
 --- a/chromium/services/service_manager/service_process_launcher.cc
 +++ b/chromium/services/service_manager/service_process_launcher.cc
-@@ -286,8 +286,15 @@ void ServiceProcessLauncher::ProcessState::StopInBackground() {
+@@ -286,8 +286,14 @@ void ServiceProcessLauncher::ProcessState::StopInBackground() {
      return;
  
    int rv = -1;
@@ -1293,10 +1294,8 @@ index 7f4f7e76bb3..7de6c4c38ed 100644
 +    success = child_process_.WaitForExit(&rv);
 +  }
 +  LOG_IF(ERROR, success) << "Failed to wait for child process";
-+
    child_process_.Close();
  }
- 
--- 
-2.44.0
 
+-- 
+2.47.0
