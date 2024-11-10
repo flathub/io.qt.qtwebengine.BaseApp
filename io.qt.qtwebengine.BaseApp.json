@@ -45,27 +45,7 @@
                     "x-checker-data": {
                         "type": "git",
                         "tag-pattern": "^(v5.15.*-lts)$"
-                    },
-                    "disable-submodules": true
-                },
-                {
-                    "type": "git",
-                    "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "commit": "207c2ac45ca3386d153770c6b0d2ea2ec21ca880",
-                    "dest": "src/3rdparty",
-                    "//": "cannot use x-checker-data, should be using the one https://invent.kde.org/qt/qt/qtwebengine.git points at as a submodule"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "rm -rf src/3rdparty/chromium/third_party/catapult"
-                    ]
-                },
-                {
-                    "type": "git",
-                    "url": "https://chromium.googlesource.com/catapult",
-                    "commit": "9e2d977782dcc3d14e7cb15614399f8d531c962a",
-                    "dest": "src/3rdparty/chromium/third_party/catapult"
+                    }
                 },
                 {
                     "type": "patch",
@@ -87,9 +67,7 @@
                     "type": "patch",
                     "paths": [
                         "patches/chromium-add-app-libdir.patch",
-                        "patches/chromium-python3.patch",
-                        "patches/chromium-pipewire03.patch",
-                        "patches/chromium-ffmpeg-binutils.patch"
+                        "patches/chromium-pipewire03.patch"
                     ],
                     "options": [
                         "--directory=src/3rdparty"
@@ -97,6 +75,7 @@
                 }
             ],
             "modules": [
+                "python3-html5lib.json",
                 "krb5/krb5.json",
                 "libevent/libevent.json",
                 "minizip/minizip.json",
