@@ -14,6 +14,7 @@ Any branch based on a non-EOL base runtime should be supported. Branches are con
 |Baseapp branch     |Base branch   |Qt Webengine version|
 |-------------------|--------------|--------------------|
 |`branch/5.15-23.08`|5.15-23.08    |5.15.x-lts          |
+|`branch/5.15-24.08`|5.15-24.08    |5.15.x-lts          |
 |`branch/6.7`       |6.7           |6.7.x               |
 |`branch/6.8`       |6.8           |6.8.x               |
 
