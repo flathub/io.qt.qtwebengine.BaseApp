@@ -1,0 +1,69 @@
+From 4c3f79a8c60648c0e0f60fd9ff0d0720d197f51e Mon Sep 17 00:00:00 2001
+From: bbhtt <bbhtt.zn0i8@slmail.me>
+Date: Sun, 10 Nov 2024 15:07:15 +0530
+Subject: [PATCH 2/6] Six patch
+
+---
+ chromium/third_party/protobuf/third_party/six/six.py | 10 ++++++++++
+ chromium/tools/grit/third_party/six/__init__.py      | 10 ++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/chromium/third_party/protobuf/third_party/six/six.py b/chromium/third_party/protobuf/third_party/six/six.py
+index 89b2188fd63..25c4a5ccd46 100644
+--- a/chromium/third_party/protobuf/third_party/six/six.py
++++ b/chromium/third_party/protobuf/third_party/six/six.py
+@@ -71,6 +71,11 @@ else:
+             MAXSIZE = int((1 << 63) - 1)
+         del X
+ 
++if PY34:
++    from importlib.util import spec_from_loader
++else:
++    spec_from_loader = None
++
+ 
+ def _add_doc(func, doc):
+     """Add documentation to a function."""
+@@ -186,6 +191,11 @@ class _SixMetaPathImporter(object):
+             return self
+         return None
+ 
++    def find_spec(self, fullname, path, target=None):
++        if fullname in self.known_modules:
++            return spec_from_loader(fullname, self)
++        return None
++
+     def __get_module(self, fullname):
+         try:
+             return self.known_modules[fullname]
+diff --git a/chromium/tools/grit/third_party/six/__init__.py b/chromium/tools/grit/third_party/six/__init__.py
+index 56e4272cb37..08a24bcefea 100644
+--- a/chromium/tools/grit/third_party/six/__init__.py
++++ b/chromium/tools/grit/third_party/six/__init__.py
+@@ -71,6 +71,11 @@ else:
+             MAXSIZE = int((1 << 63) - 1)
+         del X
+ 
++if PY34:
++    from importlib.util import spec_from_loader
++else:
++    spec_from_loader = None
++
+ 
+ def _add_doc(func, doc):
+     """Add documentation to a function."""
+@@ -186,6 +191,11 @@ class _SixMetaPathImporter(object):
+             return self
+         return None
+ 
++    def find_spec(self, fullname, path, target=None):
++        if fullname in self.known_modules:
++            return spec_from_loader(fullname, self)
++        return None
++
+     def __get_module(self, fullname):
+         try:
+             return self.known_modules[fullname]
+-- 
+2.47.0
+

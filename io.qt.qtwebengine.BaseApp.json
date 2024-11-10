@@ -51,7 +51,7 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "commit": "207c2ac45ca3386d153770c6b0d2ea2ec21ca880",
+                    "commit": "85337c28bae7d7d2c79282c4f4c92435cd7649b8",
                     "dest": "src/3rdparty",
                     "//": "cannot use x-checker-data, should be using the one https://invent.kde.org/qt/qt/qtwebengine.git points at as a submodule"
                 },
@@ -86,10 +86,12 @@
                 {
                     "type": "patch",
                     "paths": [
-                        "patches/chromium-add-app-libdir.patch",
-                        "patches/chromium-python3.patch",
-                        "patches/chromium-pipewire03.patch",
-                        "patches/chromium-ffmpeg-binutils.patch"
+                        "patches/0001-chromium-Remove-unused-python-import.patch",
+                        "patches/0002-chromium-six.patch",
+                        "patches/0003-chromium-ninja.patch",
+                        "patches/0004-chromium-icu75.patch",
+                        "patches/0005-chromium-flatpak-libdir.patch",
+                        "patches/0006-chromium-pipewire.patch"
                     ],
                     "options": [
                         "--directory=src/3rdparty"

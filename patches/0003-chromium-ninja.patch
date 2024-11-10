@@ -1,0 +1,24 @@
+From 2f35788b2514d3c69a8f83933e738e5301e61a5c Mon Sep 17 00:00:00 2001
+From: bbhtt <bbhtt.zn0i8@slmail.me>
+Date: Sun, 10 Nov 2024 15:07:39 +0530
+Subject: [PATCH 3/6] ninja patch
+
+---
+ chromium/content/public/browser/BUILD.gn | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/chromium/content/public/browser/BUILD.gn b/chromium/content/public/browser/BUILD.gn
+index 7cf82a4aacf..0e0dda2c3ca 100644
+--- a/chromium/content/public/browser/BUILD.gn
++++ b/chromium/content/public/browser/BUILD.gn
+@@ -469,6 +469,7 @@ jumbo_source_set("browser_sources") {
+     "//build:chromeos_buildflags",
+     "//cc",
+     "//components/viz/host",
++    "//components/spellcheck:buildflags",
+     "//content/browser",  # Must not be public_deps!
+     "//device/fido",
+     "//gpu",
+-- 
+2.47.0
+

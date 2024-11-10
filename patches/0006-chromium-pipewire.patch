@@ -1,3 +1,29 @@
+From dd5cf1839e568eac05d03ac1d3d43f88c374ec08 Mon Sep 17 00:00:00 2001
+From: bbhtt <bbhtt.zn0i8@slmail.me>
+Date: Sun, 10 Nov 2024 15:09:04 +0530
+Subject: [PATCH 6/6] pipewire
+
+---
+ .../webrtc/modules/desktop_capture/BUILD.gn   |  42 +-
+ .../linux/base_capturer_pipewire.cc           | 770 ++++++++++++++----
+ .../linux/base_capturer_pipewire.h            |  58 +-
+ .../linux/{pipewire.sigs => pipewire02.sigs}  |   3 +
+ .../desktop_capture/linux/pipewire03.sigs     |  46 ++
+ .../linux/screen_capturer_pipewire.cc         |  29 -
+ .../linux/screen_capturer_pipewire.h          |  33 -
+ .../linux/window_capturer_pipewire.cc         |  29 -
+ .../linux/window_capturer_pipewire.h          |  33 -
+ .../desktop_capture/screen_capturer_linux.cc  |   4 +-
+ .../desktop_capture/window_capturer_linux.cc  |   4 +-
+ chromium/third_party/webrtc/webrtc.gni        |   4 +
+ 12 files changed, 750 insertions(+), 305 deletions(-)
+ rename chromium/third_party/webrtc/modules/desktop_capture/linux/{pipewire.sigs => pipewire02.sigs} (91%)
+ create mode 100644 chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire03.sigs
+ delete mode 100644 chromium/third_party/webrtc/modules/desktop_capture/linux/screen_capturer_pipewire.cc
+ delete mode 100644 chromium/third_party/webrtc/modules/desktop_capture/linux/screen_capturer_pipewire.h
+ delete mode 100644 chromium/third_party/webrtc/modules/desktop_capture/linux/window_capturer_pipewire.cc
+ delete mode 100644 chromium/third_party/webrtc/modules/desktop_capture/linux/window_capturer_pipewire.h
+
 diff --git a/chromium/third_party/webrtc/modules/desktop_capture/BUILD.gn b/chromium/third_party/webrtc/modules/desktop_capture/BUILD.gn
 index 5235512735d..8259442f811 100644
 --- a/chromium/third_party/webrtc/modules/desktop_capture/BUILD.gn
@@ -1455,56 +1481,79 @@ index f28d7a558bc..75d20dbf1db 100644
    static void OnStreamProcess(void* data);
    static void OnNewBuffer(void* data, uint32_t id);
  
-diff --git a/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire.sigs b/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire.sigs
-deleted file mode 100644
-index 3e21e9dc07c..00000000000
+diff --git a/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire.sigs b/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire02.sigs
+similarity index 91%
+rename from chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire.sigs
+rename to chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire02.sigs
+index 3e21e9dc07c..5ac3d1d22b8 100644
 --- a/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire.sigs
-+++ /dev/null
-@@ -1,44 +0,0 @@
--// Copyright 2018 The WebRTC project authors. All rights reserved.
--// Use of this source code is governed by a BSD-style license that can be
--// found in the LICENSE file.
--
--//------------------------------------------------
--// Functions from PipeWire used in capturer code.
--//------------------------------------------------
--
--// core.h
--void pw_core_destroy(pw_core *core);
--pw_type *pw_core_get_type(pw_core *core);
--pw_core * pw_core_new(pw_loop *main_loop, pw_properties *props);
--
--// loop.h
--void pw_loop_destroy(pw_loop *loop);
--pw_loop * pw_loop_new(pw_properties *properties);
--
--// pipewire.h
--void pw_init(int *argc, char **argv[]);
--
--// properties.h
--pw_properties * pw_properties_new_string(const char *args);
--
--// remote.h
--void pw_remote_add_listener(pw_remote *remote, spa_hook *listener, const pw_remote_events *events, void *data);
--int pw_remote_connect_fd(pw_remote *remote, int fd);
--void pw_remote_destroy(pw_remote *remote);
--pw_remote * pw_remote_new(pw_core *core, pw_properties *properties, size_t user_data_size);
--
--// stream.h
--void pw_stream_add_listener(pw_stream *stream, spa_hook *listener, const pw_stream_events *events, void *data);
--int pw_stream_connect(pw_stream *stream, enum pw_direction direction, const char *port_path, enum pw_stream_flags flags, const spa_pod **params, uint32_t n_params);
--pw_buffer *pw_stream_dequeue_buffer(pw_stream *stream);
--void pw_stream_destroy(pw_stream *stream);
--void pw_stream_finish_format(pw_stream *stream, int res, const spa_pod **params, uint32_t n_params);
--pw_stream * pw_stream_new(pw_remote *remote, const char *name, pw_properties *props);
--int pw_stream_queue_buffer(pw_stream *stream, pw_buffer *buffer);
--int pw_stream_set_active(pw_stream *stream, bool active);
--
--// thread-loop.h
--void pw_thread_loop_destroy(pw_thread_loop *loop);
--pw_thread_loop * pw_thread_loop_new(pw_loop *loop, const char *name);
--int pw_thread_loop_start(pw_thread_loop *loop);
--void pw_thread_loop_stop(pw_thread_loop *loop);
++++ b/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire02.sigs
+@@ -26,6 +26,7 @@ void pw_remote_add_listener(pw_remote *remote, spa_hook *listener, const pw_remo
+ int pw_remote_connect_fd(pw_remote *remote, int fd);
+ void pw_remote_destroy(pw_remote *remote);
+ pw_remote * pw_remote_new(pw_core *core, pw_properties *properties, size_t user_data_size);
++enum pw_remote_state pw_remote_get_state(pw_remote *remote, const char **error);
+ 
+ // stream.h
+ void pw_stream_add_listener(pw_stream *stream, spa_hook *listener, const pw_stream_events *events, void *data);
+@@ -42,3 +43,5 @@ void pw_thread_loop_destroy(pw_thread_loop *loop);
+ pw_thread_loop * pw_thread_loop_new(pw_loop *loop, const char *name);
+ int pw_thread_loop_start(pw_thread_loop *loop);
+ void pw_thread_loop_stop(pw_thread_loop *loop);
++void pw_thread_loop_lock(struct pw_thread_loop *loop);
++void pw_thread_loop_unlock(struct pw_thread_loop *loop);
+diff --git a/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire03.sigs b/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire03.sigs
+new file mode 100644
+index 00000000000..78d241f40c6
+--- /dev/null
++++ b/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire03.sigs
+@@ -0,0 +1,46 @@
++// Copyright 2018 The WebRTC project authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++//------------------------------------------------
++// Functions from PipeWire used in capturer code.
++//------------------------------------------------
++
++// core.h
++int pw_core_disconnect(pw_core *core);
++
++// loop.h
++void pw_loop_destroy(pw_loop *loop);
++pw_loop * pw_loop_new(const spa_dict *props);
++
++
++// pipewire.h
++void pw_init(int *argc, char **argv[]);
++
++// properties.h
++pw_properties * pw_properties_new_string(const char *args);
++
++// stream.h
++void pw_stream_add_listener(pw_stream *stream, spa_hook *listener, const pw_stream_events *events, void *data);
++int pw_stream_connect(pw_stream *stream, enum pw_direction direction, uint32_t target_id, enum pw_stream_flags flags, const spa_pod **params, uint32_t n_params);
++pw_buffer *pw_stream_dequeue_buffer(pw_stream *stream);
++void pw_stream_destroy(pw_stream *stream);
++pw_stream * pw_stream_new(pw_core *core, const char *name, pw_properties *props);
++int pw_stream_queue_buffer(pw_stream *stream, pw_buffer *buffer);
++int pw_stream_set_active(pw_stream *stream, bool active);
++int pw_stream_update_params(pw_stream *stream, const spa_pod **params, uint32_t n_params);
++
++// thread-loop.h
++void pw_thread_loop_destroy(pw_thread_loop *loop);
++pw_thread_loop * pw_thread_loop_new(const char *name, const spa_dict *props);
++int pw_thread_loop_start(pw_thread_loop *loop);
++void pw_thread_loop_stop(pw_thread_loop *loop);
++void pw_thread_loop_lock(pw_thread_loop *loop);
++void pw_thread_loop_unlock(pw_thread_loop *loop);
++pw_loop * pw_thread_loop_get_loop(pw_thread_loop *loop);
++
++
++// context.h
++void pw_context_destroy(pw_context *context);
++pw_context *pw_context_new(pw_loop *main_loop, pw_properties *props, size_t user_data_size);
++pw_core * pw_context_connect(pw_context *context, pw_properties *properties, size_t user_data_size);
 diff --git a/chromium/third_party/webrtc/modules/desktop_capture/linux/screen_capturer_pipewire.cc b/chromium/third_party/webrtc/modules/desktop_capture/linux/screen_capturer_pipewire.cc
 deleted file mode 100644
 index fe672140cca..00000000000
@@ -1712,108 +1761,6 @@ index ca8acdbf259..505c975cece 100644
    # Enable to use the Mozilla internal settings.
    build_with_mozilla = false
  
-diff --git a/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire02.sigs b/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire02.sigs
-new file mode 100644
-index 00000000000..5ac3d1d22b8
---- /dev/null
-+++ b/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire02.sigs
-@@ -0,0 +1,47 @@
-+// Copyright 2018 The WebRTC project authors. All rights reserved.
-+// Use of this source code is governed by a BSD-style license that can be
-+// found in the LICENSE file.
-+
-+//------------------------------------------------
-+// Functions from PipeWire used in capturer code.
-+//------------------------------------------------
-+
-+// core.h
-+void pw_core_destroy(pw_core *core);
-+pw_type *pw_core_get_type(pw_core *core);
-+pw_core * pw_core_new(pw_loop *main_loop, pw_properties *props);
-+
-+// loop.h
-+void pw_loop_destroy(pw_loop *loop);
-+pw_loop * pw_loop_new(pw_properties *properties);
-+
-+// pipewire.h
-+void pw_init(int *argc, char **argv[]);
-+
-+// properties.h
-+pw_properties * pw_properties_new_string(const char *args);
-+
-+// remote.h
-+void pw_remote_add_listener(pw_remote *remote, spa_hook *listener, const pw_remote_events *events, void *data);
-+int pw_remote_connect_fd(pw_remote *remote, int fd);
-+void pw_remote_destroy(pw_remote *remote);
-+pw_remote * pw_remote_new(pw_core *core, pw_properties *properties, size_t user_data_size);
-+enum pw_remote_state pw_remote_get_state(pw_remote *remote, const char **error);
-+
-+// stream.h
-+void pw_stream_add_listener(pw_stream *stream, spa_hook *listener, const pw_stream_events *events, void *data);
-+int pw_stream_connect(pw_stream *stream, enum pw_direction direction, const char *port_path, enum pw_stream_flags flags, const spa_pod **params, uint32_t n_params);
-+pw_buffer *pw_stream_dequeue_buffer(pw_stream *stream);
-+void pw_stream_destroy(pw_stream *stream);
-+void pw_stream_finish_format(pw_stream *stream, int res, const spa_pod **params, uint32_t n_params);
-+pw_stream * pw_stream_new(pw_remote *remote, const char *name, pw_properties *props);
-+int pw_stream_queue_buffer(pw_stream *stream, pw_buffer *buffer);
-+int pw_stream_set_active(pw_stream *stream, bool active);
-+
-+// thread-loop.h
-+void pw_thread_loop_destroy(pw_thread_loop *loop);
-+pw_thread_loop * pw_thread_loop_new(pw_loop *loop, const char *name);
-+int pw_thread_loop_start(pw_thread_loop *loop);
-+void pw_thread_loop_stop(pw_thread_loop *loop);
-+void pw_thread_loop_lock(struct pw_thread_loop *loop);
-+void pw_thread_loop_unlock(struct pw_thread_loop *loop);
-diff --git a/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire03.sigs b/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire03.sigs
-new file mode 100644
-index 00000000000..78d241f40c6
---- /dev/null
-+++ b/chromium/third_party/webrtc/modules/desktop_capture/linux/pipewire03.sigs
-@@ -0,0 +1,46 @@
-+// Copyright 2018 The WebRTC project authors. All rights reserved.
-+// Use of this source code is governed by a BSD-style license that can be
-+// found in the LICENSE file.
-+
-+//------------------------------------------------
-+// Functions from PipeWire used in capturer code.
-+//------------------------------------------------
-+
-+// core.h
-+int pw_core_disconnect(pw_core *core);
-+
-+// loop.h
-+void pw_loop_destroy(pw_loop *loop);
-+pw_loop * pw_loop_new(const spa_dict *props);
-+
-+
-+// pipewire.h
-+void pw_init(int *argc, char **argv[]);
-+
-+// properties.h
-+pw_properties * pw_properties_new_string(const char *args);
-+
-+// stream.h
-+void pw_stream_add_listener(pw_stream *stream, spa_hook *listener, const pw_stream_events *events, void *data);
-+int pw_stream_connect(pw_stream *stream, enum pw_direction direction, uint32_t target_id, enum pw_stream_flags flags, const spa_pod **params, uint32_t n_params);
-+pw_buffer *pw_stream_dequeue_buffer(pw_stream *stream);
-+void pw_stream_destroy(pw_stream *stream);
-+pw_stream * pw_stream_new(pw_core *core, const char *name, pw_properties *props);
-+int pw_stream_queue_buffer(pw_stream *stream, pw_buffer *buffer);
-+int pw_stream_set_active(pw_stream *stream, bool active);
-+int pw_stream_update_params(pw_stream *stream, const spa_pod **params, uint32_t n_params);
-+
-+// thread-loop.h
-+void pw_thread_loop_destroy(pw_thread_loop *loop);
-+pw_thread_loop * pw_thread_loop_new(const char *name, const spa_dict *props);
-+int pw_thread_loop_start(pw_thread_loop *loop);
-+void pw_thread_loop_stop(pw_thread_loop *loop);
-+void pw_thread_loop_lock(pw_thread_loop *loop);
-+void pw_thread_loop_unlock(pw_thread_loop *loop);
-+pw_loop * pw_thread_loop_get_loop(pw_thread_loop *loop);
-+
-+
-+// context.h
-+void pw_context_destroy(pw_context *context);
-+pw_context *pw_context_new(pw_loop *main_loop, pw_properties *props, size_t user_data_size);
-+pw_core * pw_context_connect(pw_context *context, pw_properties *properties, size_t user_data_size);
+-- 
+2.47.0
+

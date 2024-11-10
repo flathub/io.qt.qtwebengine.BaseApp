@@ -1,3 +1,12 @@
+From 8234f3376b94f3503a235a623112aeecc31badcd Mon Sep 17 00:00:00 2001
+From: bbhtt <bbhtt.zn0i8@slmail.me>
+Date: Sun, 10 Nov 2024 15:08:29 +0530
+Subject: [PATCH 5/6] flatpak libdir
+
+---
+ chromium/build/config/linux/pkg-config.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/chromium/build/config/linux/pkg-config.py b/chromium/build/config/linux/pkg-config.py
 index 5adf70cc3bb..35f61d9f326 100755
 --- a/chromium/build/config/linux/pkg-config.py
@@ -11,3 +20,6 @@ index 5adf70cc3bb..35f61d9f326 100755
  
    for flag in all_flags[:]:
      if len(flag) == 0 or MatchesAnyRegexp(flag, strip_out):
+-- 
+2.47.0
+
