@@ -45,27 +45,7 @@
                     "x-checker-data": {
                         "type": "git",
                         "tag-pattern": "^(v5.15.*-lts)$"
-                    },
-                    "disable-submodules": true
-                },
-                {
-                    "type": "git",
-                    "url": "https://invent.kde.org/qt/qt/qtwebengine-chromium.git",
-                    "commit": "85337c28bae7d7d2c79282c4f4c92435cd7649b8",
-                    "dest": "src/3rdparty",
-                    "//": "cannot use x-checker-data, should be using the one https://invent.kde.org/qt/qt/qtwebengine.git points at as a submodule"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "rm -rf src/3rdparty/chromium/third_party/catapult"
-                    ]
-                },
-                {
-                    "type": "git",
-                    "url": "https://chromium.googlesource.com/catapult",
-                    "commit": "9e2d977782dcc3d14e7cb15614399f8d531c962a",
-                    "dest": "src/3rdparty/chromium/third_party/catapult"
+                    }
                 },
                 {
                     "type": "patch",
