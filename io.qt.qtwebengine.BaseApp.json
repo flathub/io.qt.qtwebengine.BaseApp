@@ -84,8 +84,7 @@
                 "minizip/minizip.json",
                 "pciutils/pciutils.json",
                 "re2/re2.json",
-                "snappy/snappy.json",
-                "python3-html5lib.json"
+                "snappy/snappy.json"
             ]
         },
         {
