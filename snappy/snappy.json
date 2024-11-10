@@ -1,6 +1,6 @@
 {
     "name": "snappy",
-    "buildsystem": "cmake",
+    "buildsystem": "cmake-ninja",
     "build-options": {
         "cxxflags": "-DNDEBUG"
     },
