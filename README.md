@@ -87,7 +87,7 @@ build-options:
 If a module uses the Qmake buildsystem, `QMAKEPATH` and some additional
 flags might be necessary so that it can locate the Webengine modules.
 
-`QMAKEPATH` should be `/app` for `5.15-2x.08` branches and `/app/lib`
+`QMAKEPATH` should be `/app/lib` for `5.15-2x.08` branches and `/app`
 for `6.x` branches of the baseapp.
 
 ```yaml
