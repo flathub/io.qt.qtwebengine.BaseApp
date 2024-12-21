@@ -82,6 +82,30 @@ build-options:
       prepend-pkg-config-path: /app/lib/x86_64-linux-gnu/pkgconfig
 ```
 
+## Qmake
+
+If a module uses the Qmake buildsystem, `QMAKEPATH` and some additional
+flags might be necessary so that it can locate the Webengine modules.
+
+`QMAKEPATH` should be `/app` for `5.15-2x.08` branches and `/app/lib`
+for `6.x` branches of the baseapp.
+
+```yaml
+build-options:
+  env:
+    - QMAKEPATH=/app
+```
+
+Additional header locations can be set like so inside `config-opts`
+like so
+
+```yaml
+config-opts:
+  - QMAKE_INCDIR+=/app/include/QtWebEngine
+  - QMAKE_INCDIR+=/app/include/QtWebEngineCore
+  - QMAKE_INCDIR+=/app/include/QtWebEngineWidgets
+```
+
 ## Cleanup
 
 Please make sure to cleanup development files from the BaseApp, in the application
