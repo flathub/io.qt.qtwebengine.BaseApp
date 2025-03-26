@@ -61,15 +61,7 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/dictionaries.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/locales.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/resources.patch"
+                    "path": "patches/qtwebengine-flatpak-paths.patch"
                 },
                 {
                     "type": "patch",
