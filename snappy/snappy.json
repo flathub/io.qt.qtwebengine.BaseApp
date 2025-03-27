@@ -19,8 +19,8 @@
         {
             "type": "git",
             "url": "https://github.com/google/snappy.git",
-            "tag": "1.2.1",
-            "commit": "2c94e11145f0b7b184b831577c93e5a41c4c0346",
+            "tag": "1.2.2",
+            "commit": "6af9287fbdb913f0794d0148c6aa43b58e63c8e3",
             "x-checker-data": {
                 "type": "anitya",
                 "project-id": 4844,
@@ -34,7 +34,7 @@
         },
         {
             "type": "patch",
-            "path": "add-option-to-enable-rtti-set-default-to-current-behavior.patch"
+            "path": "../patches/snappy-rtti.patch"
         }
     ]
 }
