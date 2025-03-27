@@ -1,17 +1,8 @@
-From 376f14b5933e91d08ade6a503fdd657a6e01a149 Mon Sep 17 00:00:00 2001
-From: Max <tchristy001@outlook.com>
-Date: Wed, 24 Nov 2021 12:16:23 -0600
-Subject: [PATCH] add option to enable rtti, set default to current behavior
-
----
- CMakeLists.txt | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6eef485..aefd35b 100644
+index cd71a47..d641b0e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -53,8 +53,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+@@ -53,8 +53,10 @@ if(MSVC)
    add_definitions(-D_HAS_EXCEPTIONS=0)
  
    # Disable RTTI.
@@ -21,10 +12,10 @@ index 6eef485..aefd35b 100644
 +    string(REGEX REPLACE "/GR" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 +    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR-")
 +  endif(NOT SNAPPY_ENABLE_RTTI)
- else(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+ else(MSVC)
    # Use -Wall for clang and gcc.
    if(NOT CMAKE_CXX_FLAGS MATCHES "-Wall")
-@@ -78,8 +80,10 @@ else(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+@@ -83,8 +85,10 @@ else(MSVC)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
  
    # Disable RTTI.
@@ -34,10 +25,10 @@ index 6eef485..aefd35b 100644
 +    string(REGEX REPLACE "-frtti" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 +    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
 +  endif(NOT SNAPPY_ENABLE_RTTI)
- endif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+ endif(MSVC)
  
  # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to make
-@@ -98,6 +102,8 @@ option(SNAPPY_REQUIRE_AVX2 "Target processors with AVX2 support." OFF)
+@@ -103,6 +107,8 @@ option(SNAPPY_REQUIRE_AVX2 "Target processors with AVX2 support." OFF)
  
  option(SNAPPY_INSTALL "Install Snappy's header and library" ON)
  
