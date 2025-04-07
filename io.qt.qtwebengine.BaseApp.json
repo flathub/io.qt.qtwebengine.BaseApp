@@ -1,13 +1,13 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "6.8",
+    "branch": "6.9",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
         "org.freedesktop.Sdk.Extension.node20"
     ],
-    "runtime-version": "6.8",
+    "runtime-version": "6.9",
     "separate-locales": false,
     "modules": [
         {
