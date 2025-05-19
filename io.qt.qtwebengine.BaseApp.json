@@ -40,8 +40,8 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v5.15.18-lts",
-                    "commit": "87ceb6a2ef5ee25d56f765dc533728c4ca4787e0",
+                    "tag": "v5.15.19-lts",
+                    "commit": "a5d11cd6f8c487443c15c7e3a6cd8090b65cb313",
                     "x-checker-data": {
                         "type": "git",
                         "tag-pattern": "^(v5.15.*-lts)$"
