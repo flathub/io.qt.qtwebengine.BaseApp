@@ -24,8 +24,8 @@
         {
             "type": "git",
             "url": "https://invent.kde.org/qt/qt/qtwebview.git",
-            "tag": "v5.15.16-lts-lgpl",
-            "commit": "e3de9fef1557d4a5bac4c9fe42b399df34502c9f",
+            "tag": "v5.15.17-lts-lgpl",
+            "commit": "f16dadb6d147c46565537ede46518a352cdd87c9",
             "x-checker-data": {
                 "type": "git",
                 "tag-pattern": "^(v5.15.*-lts-lgpl)$"
