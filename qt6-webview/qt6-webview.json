@@ -29,8 +29,8 @@
         {
             "type": "git",
             "url": "https://invent.kde.org/qt/qt/qtwebview.git",
-            "tag": "v6.9.0",
-            "commit": "93adf4e67859fa50f3800985ff96a188a06719ec",
+            "tag": "v6.9.1",
+            "commit": "6ea3114440f44b6b0ba94c1514631c86ca3062b8",
             "x-checker-data": {
                 "is-important": true,
                 "type": "json",
