@@ -110,6 +110,7 @@
                         "rm -rfv ${FLATPAK_DEST}/lib/pkgconfig",
                         "rm -rfv ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/cmake",
                         "rm -rfv ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/metatypes",
+                        "rm -rfv ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/pkgconfig",
                         "rm -rfv ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/*.prl",
                         "rm -rfv ${FLATPAK_DEST}/lib/libexec/{gn,qwebengine_convert_dict}",
                         "rm -rfv ${FLATPAK_DEST}/lib/metatypes",
