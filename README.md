@@ -1,5 +1,7 @@
 # QtWebEngine BaseApp
 
+TEST 
+
 This base application provides Qt's WebEngine module, which is missing from the KDE runtime, and makes it possible to
 quickly and easily package applications that depend on this module.
 
