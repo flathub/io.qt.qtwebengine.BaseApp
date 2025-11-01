@@ -1,7 +1,7 @@
-From 694469efe9a73ce6c23654ba797551b1cbd75c42 Mon Sep 17 00:00:00 2001
-From: bbhtt <bbhtt.zn0i8@slmail.me>
-Date: Thu, 31 Oct 2024 11:53:09 +0530
-Subject: [PATCH] chromium-flatpak-expose-widevine-into-the-sandbox
+From 90a698c53d6fa50aefbd8d626759d622381a403e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Hubert=20Figui=C3=A8re?= <hub@figuiere.net>
+Date: Mon, 3 Nov 2025 17:54:11 -0500
+Subject: [PATCH 4/4] chromium-flatpak-expose-widevine-into-the-sandbox
 
 ---
  .../zygote_host/zygote_host_impl_linux.cc     | 54 ++++++++++++-
@@ -10,12 +10,12 @@ Subject: [PATCH] chromium-flatpak-expose-widevine-into-the-sandbox
  3 files changed, 132 insertions(+), 24 deletions(-)
 
 diff --git a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-index 84965a7b03b..f4c5b273bdf 100644
+index 753f65627bf..60e6ef2d08d 100644
 --- a/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
 +++ b/chromium/content/browser/zygote_host/zygote_host_impl_linux.cc
-@@ -10,7 +10,10 @@
+@@ -14,7 +14,10 @@
+ #include <sys/types.h>
  
- #include "base/allocator/allocator_extension.h"
  #include "base/files/file_enumerator.h"
 +#include "base/files/file_util.h"
  #include "base/logging.h"
@@ -24,10 +24,10 @@ index 84965a7b03b..f4c5b273bdf 100644
  #include "base/posix/unix_domain_socket.h"
  #include "base/process/kill.h"
  #include "base/process/launch.h"
-@@ -18,9 +21,12 @@
+@@ -22,9 +25,12 @@
  #include "base/strings/string_number_conversions.h"
+ #include "base/types/fixed_array.h"
  #include "build/build_config.h"
- #include "build/chromeos_buildflags.h"
 +#include "chrome/common/chrome_paths.h"  // nogncheck
  #include "content/common/zygote/zygote_commands_linux.h"
  #include "content/common/zygote/zygote_communication_linux.h"
@@ -37,7 +37,7 @@ index 84965a7b03b..f4c5b273bdf 100644
  #include "content/public/common/zygote/zygote_handle.h"
  #include "sandbox/linux/services/credentials.h"
  #include "sandbox/linux/services/flatpak_sandbox.h"
-@@ -29,6 +35,7 @@
+@@ -33,6 +39,7 @@
  #include "sandbox/linux/suid/common/sandbox.h"
  #include "sandbox/policy/linux/sandbox_linux.h"
  #include "sandbox/policy/switches.h"
@@ -45,7 +45,7 @@ index 84965a7b03b..f4c5b273bdf 100644
  
  #if BUILDFLAG(IS_CHROMEOS)
  #include "content/common/zygote/zygote_communication_linux.h"
-@@ -188,8 +195,51 @@ pid_t ZygoteHostImpl::LaunchZygote(
+@@ -197,8 +204,51 @@ pid_t ZygoteHostImpl::LaunchZygote(
    if (is_sandboxed_zygote && use_namespace_sandbox_) {
      process = sandbox::NamespaceSandbox::LaunchProcess(*cmd_line, options);
    } else if (is_sandboxed_zygote && use_flatpak_sandbox_) {
@@ -323,6 +323,5 @@ index 167bbc85945..de8e7165b45 100644
                         base::WaitableEvent* event,
                         dbus::Response* response,
 -- 
-2.47.0
-
+2.51.0
 

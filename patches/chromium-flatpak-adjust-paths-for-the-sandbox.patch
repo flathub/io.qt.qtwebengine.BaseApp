@@ -1,18 +1,14 @@
-From 9681a7752e6690b749f06220439ffd630839131c Mon Sep 17 00:00:00 2001
-From: bbhtt <bbhtt.zn0i8@slmail.me>
-Date: Thu, 31 Oct 2024 11:29:11 +0530
-Subject: [PATCH] Adjust paths for the sandbox
+commit c5a99c6ee066f015edcdcb9fe8c2380570c60b97
+Author: Hubert Figuière <hub@figuiere.net>
+Date:   Mon Nov 3 18:03:51 2025 -0500
 
----
- chromium/chrome/common/BUILD.gn        |  4 ++++
- chromium/chrome/common/chrome_paths.cc | 26 +++++++++++++++++++++++++-
- 2 files changed, 29 insertions(+), 1 deletion(-)
+    chromium-flatpak-adjust-paths-for-the-sandbox
 
 diff --git a/chromium/chrome/common/BUILD.gn b/chromium/chrome/common/BUILD.gn
-index fc6a35fe35b..968728d3b2d 100644
+index 75c843b3b95..e39e15fdad9 100644
 --- a/chromium/chrome/common/BUILD.gn
 +++ b/chromium/chrome/common/BUILD.gn
-@@ -706,6 +706,10 @@ static_library("constants") {
+@@ -636,6 +636,10 @@ static_library("constants") {
        "//third_party/widevine/cdm:headers",
      ]
    }
@@ -24,7 +20,7 @@ index fc6a35fe35b..968728d3b2d 100644
  
  # Use a static library here because many test binaries depend on this but don't
 diff --git a/chromium/chrome/common/chrome_paths.cc b/chromium/chrome/common/chrome_paths.cc
-index 94843ce782e..8e850592adc 100644
+index afc13e1b56f..d707b71ba03 100644
 --- a/chromium/chrome/common/chrome_paths.cc
 +++ b/chromium/chrome/common/chrome_paths.cc
 @@ -38,6 +38,10 @@
@@ -38,8 +34,8 @@ index 94843ce782e..8e850592adc 100644
  #if BUILDFLAG(ENABLE_WIDEVINE)
  #include "third_party/widevine/cdm/widevine_cdm_common.h"  // nogncheck
  #endif
-@@ -541,6 +545,14 @@ bool PathProvider(int key, base::FilePath* result) {
-       break;
+@@ -529,6 +533,14 @@ bool PathProvider(int key, base::FilePath* result) {
+ #endif
  #if BUILDFLAG(IS_POSIX) && !BUILDFLAG(IS_MAC) && !BUILDFLAG(IS_OPENBSD)
      case chrome::DIR_POLICY_FILES: {
 +#if defined(OS_LINUX)
@@ -53,7 +49,7 @@ index 94843ce782e..8e850592adc 100644
        cur = base::FilePath(policy::kPolicyPath);
        break;
      }
-@@ -561,7 +573,13 @@ bool PathProvider(int key, base::FilePath* result) {
+@@ -549,7 +561,13 @@ bool PathProvider(int key, base::FilePath* result) {
  #endif
  #if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
      case chrome::DIR_STANDALONE_EXTERNAL_EXTENSIONS: {
@@ -68,7 +64,7 @@ index 94843ce782e..8e850592adc 100644
        break;
      }
  #endif
-@@ -618,6 +636,12 @@ bool PathProvider(int key, base::FilePath* result) {
+@@ -596,6 +614,12 @@ bool PathProvider(int key, base::FilePath* result) {
            "/Library/Application Support/Chromium/NativeMessagingHosts"));
  #endif
  #else  // BUILDFLAG(IS_MAC)
@@ -81,7 +77,3 @@ index 94843ce782e..8e850592adc 100644
  #if BUILDFLAG(GOOGLE_CHROME_BRANDING)
        cur = base::FilePath(
            FILE_PATH_LITERAL("/etc/opt/chrome/native-messaging-hosts"));
--- 
-2.47.0
-
-

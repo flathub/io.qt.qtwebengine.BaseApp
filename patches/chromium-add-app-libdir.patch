@@ -1,7 +1,7 @@
-From 3cb20aa4c0cc47a2e08d908db9a8ae61d7b34592 Mon Sep 17 00:00:00 2001
+From d618cb528e95d4081bfd803cfc57a593add4351f Mon Sep 17 00:00:00 2001
 From: bbhtt <bbhtt.zn0i8@slmail.me>
 Date: Thu, 31 Oct 2024 10:31:10 +0530
-Subject: [PATCH] chromium-add-app-libdir-patch
+Subject: [PATCH 1/4] chromium-add-app-libdir-patch
 
 ---
  chromium/build/config/linux/pkg-config.py | 2 +-
@@ -21,6 +21,5 @@ index e3e582d2ee3..c2d07d6b94f 100755
    for flag in all_flags[:]:
      if len(flag) == 0 or MatchesAnyRegexp(flag, strip_out):
 -- 
-2.47.0
-
+2.51.0
 
