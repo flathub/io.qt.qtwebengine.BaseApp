@@ -73,6 +73,10 @@
                 },
                 {
                     "type": "patch",
+                    "path": "patches/qtwebengine-fix-gpu-logging-crash.patch"
+                },
+                {
+                    "type": "patch",
                     "paths": [
                         "patches/chromium-add-app-libdir.patch",
                         "patches/chromium-flatpak-add-initial-sandbox-support.patch",
