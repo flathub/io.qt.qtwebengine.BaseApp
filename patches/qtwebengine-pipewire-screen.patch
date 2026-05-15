@@ -1,0 +1,32 @@
+--- a/src/core/desktop_media_controller.cpp
++++ b/src/core/desktop_media_controller.cpp
+@@ -113,13 +113,26 @@ void DesktopMediaListQtPrivate::init()
+     // This makes direct 'selectScreen/Window' calls possible from the frontend.
+     // Note: StartUpdating should be called after Update is completed as it can overwrite the
+     // internal cb.
++    //
++    // For capturers that own their own picker (delegated source list, e.g. the
++    // xdg-desktop-portal PipeWire capturer on Wayland) StartUpdating() opens
++    // that picker dialog.  Doing this once per list (screens + windows) inside
++    // DesktopMediaController would surface two redundant portal dialogs in
++    // addition to the one the video-capture service later opens for the
++    // actually streamed source - see QTBUG-142081.  Skip StartUpdating() in
++    // that case; Update() has already provided the synthetic source the
++    // delegated backend exposes, which is sufficient for selectScreen() /
++    // selectWindow() to forward the correct DesktopMediaID to the capture
++    // pipeline.
+     if (mediaList) {
++        const bool isDelegated = mediaList->IsSourceListDelegated();
+         base::OnceCallback<void()> onComplete = base::BindOnce(
+-                [](DesktopMediaListQtPrivate *observer) {
++                [](DesktopMediaListQtPrivate *observer, bool isDelegated) {
+                     Q_EMIT observer->q_ptr->initialized();
+-                    observer->startUpdating();
++                    if (!isDelegated)
++                        observer->startUpdating();
+                 },
+-                this);
++                this, isDelegated);
+         mediaList->Update(std::move(onComplete));
+     } else {
+         QTimer::singleShot(0, q_ptr, [this]() { Q_EMIT q_ptr->initialized(); });
