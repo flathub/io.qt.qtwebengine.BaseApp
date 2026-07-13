@@ -1,18 +1,8 @@
-From e7a9fa0c98b67c50a7967bf681454840826a4165 Mon Sep 17 00:00:00 2001
-From: bbhtt <bbhtt.zn0i8@slmail.me>
-Date: Thu, 31 Oct 2024 17:58:12 +0530
-Subject: [PATCH] qtwebengine: Disbale xnnpack on aarch64
-
----
- src/core/CMakeLists.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index de5222645..052777494 100644
---- a/src/core/CMakeLists.txt
-+++ b/src/core/CMakeLists.txt
-@@ -544,6 +544,10 @@ foreach(arch ${archs})
-                     )
+diff -Naur a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+--- a/src/core/CMakeLists.txt	2026-07-12 11:56:46.142749827 +0200
++++ b/src/core/CMakeLists.txt	2026-07-12 14:26:38.736077886 +0200
+@@ -595,6 +595,10 @@
+                     list(APPEND gnArgArg libyuv_use_sve=false)
                  endif()
              endif()
 +            if(cpu MATCHES aarch64 OR cpu MATCHES "arm.*")
@@ -22,6 +12,3 @@ index de5222645..052777494 100644
              unset(cpu)
          endif()
  
--- 
-2.47.0
-

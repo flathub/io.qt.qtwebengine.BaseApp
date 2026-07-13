@@ -1,13 +1,12 @@
-diff --git a/src/core/configure/BUILD.root.gn.in b/src/core/configure/BUILD.root.gn.in
-index 0e8ce19..ff56b62 100644
---- a/src/core/configure/BUILD.root.gn.in
-+++ b/src/core/configure/BUILD.root.gn.in
-@@ -202,6 +202,8 @@ source_set("qtwebengine_spellcheck_sources") {
+diff -Naur a/src/core/configure/BUILD.root.gn.in b/src/core/configure/BUILD.root.gn.in
+--- a/src/core/configure/BUILD.root.gn.in	2026-07-12 11:56:46.147749852 +0200
++++ b/src/core/configure/BUILD.root.gn.in	2026-07-12 14:12:37.046855018 +0200
+@@ -279,6 +279,8 @@
  }
  
  source_set("qtwebengine_sources") {
 +  flatpak_arch = getenv("FLATPAK_ARCH")
 +  include_dirs = [ "/usr/include/dbus-1.0", "/usr/lib/${flatpak_arch}-linux-gnu/dbus-1.0/include" ]
    configs += [
-     ":cpp17_config",
+     ":cpp20_config",
      "//skia:skia_config",
