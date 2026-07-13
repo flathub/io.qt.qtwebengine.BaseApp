@@ -1,13 +1,13 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "6.10",
+    "branch": "6.11",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
         "org.freedesktop.Sdk.Extension.node20"
     ],
-    "runtime-version": "6.10",
+    "runtime-version": "6.11",
     "separate-locales": false,
     "modules": [
         {
@@ -42,13 +42,13 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.10.2",
-                    "commit": "105f9c7ec298ff2387569c418badade17b3e3bee",
+                    "tag": "v6.11.1",
+                    "commit": "eb0793cc4b76e93cf669f586fd68c76019f40ec9",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
-                        "tag-query": "first(.[].name | match( \"v6.10[\\\\d.]+-lts|v6.10[\\\\d.]+\" ) | .string)",
+                        "tag-query": "first(.[].name | match( \"v6.11[\\\\d.]+-lts|v6.11[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
                     }
