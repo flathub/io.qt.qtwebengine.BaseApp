@@ -11,7 +11,7 @@ If you just found this base application, then you might also be interested in th
 
 Any branch based on a non-EOL base runtime should be supported. Branches are considered end-of-life when the base branch is EOL. The current list of supported branches is:
 
-| Baseapp Git branch  | Baseapp Flatpak branch     Runtime Flatpak branch      QtWebengine version
+| Baseapp Git branch  | Baseapp Flatpak branch | Runtime Flatpak branch     | QtWebengine version  |
 |---------------------|------------------------|----------------------------|----------------------|
 | `branch/5.15-25.08` | 5.15-25.08             | KDE 5.15-25.08 FDSDK 25.08 | 5.15.x-lts           |
 | `branch/6.10`       | 6.10                   | KDE 6.10       FDSDK 25.08 | 6.10.x               |
