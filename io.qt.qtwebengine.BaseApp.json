@@ -1,13 +1,13 @@
 {
     "id": "io.qt.qtwebengine.BaseApp",
-    "branch": "6.11",
+    "branch": "6.12",
     "runtime": "org.kde.Platform",
     "sdk": "org.kde.Sdk",
     "sdk-extensions": [
         "org.kde.Sdk.Locale",
-        "org.freedesktop.Sdk.Extension.node20"
+        "org.freedesktop.Sdk.Extension.node26"
     ],
-    "runtime-version": "6.11",
+    "runtime-version": "6.12",
     "separate-locales": false,
     "modules": [
         {
@@ -15,9 +15,9 @@
             "buildsystem": "cmake-ninja",
             "builddir": true,
             "build-options": {
-                "append-path": "/usr/lib/sdk/node20/bin",
+                "append-path": "/usr/lib/sdk/node26/bin",
                 "env": [
-                    "npm_config_nodedir=/usr/lib/sdk/node20"
+                    "npm_config_nodedir=/usr/lib/sdk/node26"
                 ]
             },
             "config-opts": [
@@ -42,13 +42,13 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.11.2",
-                    "commit": "a33fa2a897e5ee58e385b3f88dc247d99fca56db",
+                    "tag": "v6.140.0-rc",
+                    "commit": "d505fc23640d2bd6345e6483eb73daf4e19f5829",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
                         "url": "https://invent.kde.org/api/v4/projects/qt%2Fqt%2Fqtwebengine/repository/tags",
-                        "tag-query": "first(.[].name | match( \"v6.11[\\\\d.]+-lts|v6.11[\\\\d.]+\" ) | .string)",
+                        "tag-query": "first(.[].name | match( \"v6.140[\\\\d.]+-lts|v6.140[\\\\d.]+\" ) | .string)",
                         "version-query": "$tag | sub(\"^v\"; \"\")",
                         "timestamp-query": ".[] | select(.name==$tag) | .commit.created_at"
                     }
@@ -65,11 +65,15 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/flatpak-includedir-dbus.patch"
+                    "path": "patches/qtwebengine-pipewire-camera.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "patches/qtwebengine-Disbale-xnnpack-on-aarch64.patch"
+                    "path": "patches/qtwebengine-pipewire-screen.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patches/flatpak-includedir-dbus.patch"
                 },
                 {
                     "type": "patch",
@@ -77,7 +81,8 @@
                         "patches/chromium-add-app-libdir.patch",
                         "patches/chromium-flatpak-add-initial-sandbox-support.patch",
                         "patches/chromium-flatpak-adjust-paths-for-the-sandbox.patch",
-                        "patches/chromium-flatpak-expose-widevine-into-the-sandbox.patch"
+                        "patches/chromium-flatpak-expose-widevine-into-the-sandbox.patch",
+                        "patches/chromium-fix-gpu-crash.patch"
                     ],
                     "options": [
                         "--directory=src/3rdparty"

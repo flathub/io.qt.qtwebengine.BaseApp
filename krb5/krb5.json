@@ -23,6 +23,10 @@
             }
         },
         {
+            "type": "patch",
+            "path": "../patches/krb5-c23-strchr.patch"
+        },
+        {
             "type": "file",
             "path": "krb5.conf"
         }
