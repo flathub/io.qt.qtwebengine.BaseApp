@@ -42,8 +42,8 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/qt/qt/qtwebengine.git",
-                    "tag": "v6.11.2",
-                    "commit": "a33fa2a897e5ee58e385b3f88dc247d99fca56db",
+                    "tag": "v6.11.3",
+                    "commit": "6de08a0e135c48890ba49f394d969ed5964c1cc5",
                     "x-checker-data": {
                         "is-main-source": true,
                         "type": "json",
@@ -61,15 +61,13 @@
                 },
                 {
                     "type": "patch",
-                    "path": "patches/qtwebengine-flatpak-paths.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/flatpak-includedir-dbus.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patches/qtwebengine-Disbale-xnnpack-on-aarch64.patch"
+                    "paths": [
+                        "patches/qtwebengine-flatpak-paths.patch",
+                        "patches/flatpak-includedir-dbus.patch",
+                        "patches/qtwebengine-Disbale-xnnpack-on-aarch64.patch",
+                        "patches/qtwebengine-pipewire-screen.patch",
+                        "patches/qtwebengine-pipewire-camera.patch"
+                    ]
                 },
                 {
                     "type": "patch",
@@ -77,7 +75,9 @@
                         "patches/chromium-add-app-libdir.patch",
                         "patches/chromium-flatpak-add-initial-sandbox-support.patch",
                         "patches/chromium-flatpak-adjust-paths-for-the-sandbox.patch",
-                        "patches/chromium-flatpak-expose-widevine-into-the-sandbox.patch"
+                        "patches/chromium-flatpak-expose-widevine-into-the-sandbox.patch",
+                        "patches/chromium-fix-gpu-crash.patch"
+
                     ],
                     "options": [
                         "--directory=src/3rdparty"

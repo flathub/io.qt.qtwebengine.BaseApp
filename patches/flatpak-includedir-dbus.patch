@@ -1,7 +1,8 @@
-diff -Naur a/src/core/configure/BUILD.root.gn.in b/src/core/configure/BUILD.root.gn.in
---- a/src/core/configure/BUILD.root.gn.in	2026-07-12 11:56:46.147749852 +0200
-+++ b/src/core/configure/BUILD.root.gn.in	2026-07-12 14:12:37.046855018 +0200
-@@ -279,6 +279,8 @@
+diff --git a/src/core/configure/BUILD.root.gn.in b/src/core/configure/BUILD.root.gn.in
+index bb2131734..389f9a9aa 100644
+--- a/src/core/configure/BUILD.root.gn.in
++++ b/src/core/configure/BUILD.root.gn.in
+@@ -289,6 +289,8 @@ source_set("devtools_sources") {
  }
  
  source_set("qtwebengine_sources") {
